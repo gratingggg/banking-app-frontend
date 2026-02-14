@@ -1,0 +1,16 @@
+The screens :
+
+    - Splash screen
+    - Login screen
+    - Register screen
+    - Dashboard
+    - Profile
+    - Accounts
+    - Loan
+    - Transaction History
+    - Notifications
+
+
+
+
+INSERT INTO employees VALUE ('2002-12-24', 0, 0, 2, '123412341234', 'agre@gmail.com', 'ADMIN', 'parth', '$2a$10$gmbNik/1Q8SMVBTuAaVMdObZwOp/CEHUQNhlWG7SuHLpZU3Nx.NW2', '1234512345', 'ACTIVE', 'parth');
