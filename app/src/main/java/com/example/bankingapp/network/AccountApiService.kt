@@ -1,6 +1,6 @@
 package com.example.bankingapp.network
 
-import com.example.bankingapp.models.PagedResultDto
+import com.example.bankingapp.models.transactions.TransactionPagedResultDto
 import com.example.bankingapp.models.account.AccountBalanceResponseDto
 import com.example.bankingapp.models.account.AccountRequestDto
 import com.example.bankingapp.models.account.AccountResponseDto
@@ -29,13 +29,13 @@ interface AccountApiService {
     @GET(Endpoints.CUSTOMER_ACCOUNT_TRANSACTION_ALL)
     suspend fun getAllAccountTransactionsByCustomer(
         @Path("accountId") accountId: Long,
-        @Query("path") path: Int? = null,
+        @Query("page") page: Int? = null,
         @Query("size") size: Int? = null,
         @Query("transactionStatus") transactionStatus: TransactionStatus? = null,
         @Query("transactionType") transactionType: TransactionType? = null,
         @Query("fromDate") fromDate: String? = null,
         @Query("toDate") toDate: String? = null
-    ): Response<PagedResultDto<TransactionResponseDto>>
+    ): Response<TransactionPagedResultDto>
 
     @POST(Endpoints.CUSTOMER_ACCOUNT_CREATE)
     suspend fun createAccountByCustomer(
@@ -76,13 +76,13 @@ interface AccountApiService {
     @GET(Endpoints.EMPLOYEE_ACCOUNT_TRANSACTIONS_ALL)
     suspend fun getAllAccountTransactionsByEmployee(
         @Path("accountId") accountId: Long,
-        @Query("path") path: Int? = null,
+        @Query("page") page: Int? = null,
         @Query("size") size: Int? = null,
         @Query("transactionStatus") transactionStatus: TransactionStatus? = null,
         @Query("transactionType") transactionType: TransactionType? = null,
         @Query("fromDate") fromDate: String? = null,
         @Query("toDate") toDate: String? = null
-    ): Response<PagedResultDto<TransactionResponseDto>>
+    ): Response<TransactionPagedResultDto>
 
     @GET(Endpoints.EMPLOYEE_ACCOUNT_BALANCE)
     suspend fun getAccountBalanceByEmployee(
@@ -92,13 +92,13 @@ interface AccountApiService {
     @GET(Endpoints.EMPLOYEE_CUSTOMER_TRANSACTION_ALL)
     suspend fun getAllTransactionByEmployee(
         @Path("customerId") customerId: Long,
-        @Query("path") path: Int? = null,
+        @Query("page") page: Int? = null,
         @Query("size") size: Int? = null,
         @Query("transactionStatus") transactionStatus: TransactionStatus? = null,
         @Query("transactionType") transactionType: TransactionType? = null,
         @Query("fromDate") fromDate: String? = null,
         @Query("toDate") toDate: String? = null
-    ): Response<PagedResultDto<TransactionResponseDto>>
+    ): Response<TransactionPagedResultDto>
 
     @POST(Endpoints.EMPLOYEE_ACCOUNT_DEPOSIT)
     suspend fun deposit(

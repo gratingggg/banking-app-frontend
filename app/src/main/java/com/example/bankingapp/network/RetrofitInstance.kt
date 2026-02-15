@@ -2,7 +2,9 @@ package com.example.bankingapp.network
 
 import com.example.bankingapp.models.exception.ErrorResponse
 import com.example.bankingapp.network.AuthApiService
+import com.example.bankingapp.utils.BigDecimalAdapter
 import com.example.bankingapp.utils.LocalDateAdapter
+import com.example.bankingapp.utils.LocalDateTimeAdapter
 import com.example.bankingapp.utils.TokenManager
 import com.example.bankingapp.utils.TokenManager.token
 import com.squareup.moshi.Moshi
@@ -32,6 +34,8 @@ object RetrofitInstance {
     private val moshi: Moshi = Moshi.Builder()
         .add(KotlinJsonAdapterFactory())
         .add(LocalDateAdapter())
+        .add(BigDecimalAdapter())
+        .add(LocalDateTimeAdapter())
         .build()
 
     private val retrofit: Retrofit = Retrofit.Builder()
@@ -43,6 +47,7 @@ object RetrofitInstance {
     val authApiService: AuthApiService = retrofit.create(AuthApiService::class.java)
     val registerApiService: RegisterApiService = retrofit.create(RegisterApiService::class.java)
     val accountApiService: AccountApiService = retrofit.create(AccountApiService::class.java)
+    val loanApiService: LoanApiService = retrofit.create(LoanApiService::class.java)
 
     fun parseError(errorBody: ResponseBody?): ErrorResponse? {
         val clazz = ErrorResponse::class.java

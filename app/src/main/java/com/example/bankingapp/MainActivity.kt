@@ -1,6 +1,7 @@
 package com.example.bankingapp
 
 import android.os.Bundle
+import android.util.Log.v
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -17,12 +18,15 @@ import com.example.bankingapp.repository.auth.AuthRepositoryImpl
 import com.example.bankingapp.repository.register.RegisterRepositoryImpl
 import com.example.bankingapp.testing.TestingAuthApi
 import com.example.bankingapp.testing.TestingCustomerAccountApi
+import com.example.bankingapp.testing.TestingEmployeeAccountApi
 import com.example.bankingapp.testing.TestingRegisterApi
 import com.example.bankingapp.viewmodel.AuthViewModel
 import com.example.bankingapp.viewmodel.CustomerAccountViewModel
+import com.example.bankingapp.viewmodel.EmployeeAccountViewModel
 import com.example.bankingapp.viewmodel.RegisterViewModel
 import com.example.bankingapp.viewmodel.factory.AuthViewModelFactory
 import com.example.bankingapp.viewmodel.factory.CustomerAccountViewModelFactory
+import com.example.bankingapp.viewmodel.factory.EmployeeAccountViewModelFactory
 import com.example.bankingapp.viewmodel.factory.RegisterViewModelFactory
 
 class MainActivity : ComponentActivity() {
@@ -41,6 +45,12 @@ class MainActivity : ComponentActivity() {
         )
     }
 
+    private val employeeAccountViewModel: EmployeeAccountViewModel by viewModels{
+        EmployeeAccountViewModelFactory(
+            AccountRepositoryImpl(RetrofitInstance.accountApiService)
+        )
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -50,15 +60,18 @@ class MainActivity : ComponentActivity() {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                TestingRegisterApi(
-                    viewModel = registerViewModel
-                )
+//                TestingRegisterApi(
+//                    viewModel = registerViewModel
+//                )
                 TestingAuthApi(
                     viewModel = authViewModel
                 )
                 TestingCustomerAccountApi(
                     viewModel = customerAccountViewModel
                 )
+//                TestingEmployeeAccountApi(
+//                    viewModel = employeeAccountViewModel
+//                )
             }
         }
     }

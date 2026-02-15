@@ -1,6 +1,8 @@
 package com.example.bankingapp.repository.account
 
-import com.example.bankingapp.models.PagedResultDto
+import android.R.attr.path
+import android.util.Log
+import com.example.bankingapp.models.transactions.TransactionPagedResultDto
 import com.example.bankingapp.models.account.AccountBalanceResponseDto
 import com.example.bankingapp.models.account.AccountRequestDto
 import com.example.bankingapp.models.account.AccountResponseDto
@@ -49,16 +51,16 @@ class AccountRepositoryImpl(
 
     override suspend fun getAllAccountTransactionsByCustomer(
         accountId: Long,
-        path: Int?,
+        page: Int?,
         size: Int?,
         transactionStatus: TransactionStatus?,
         transactionType: TransactionType?,
         fromDate: String?,
         toDate: String?
-    ): ApiResult<PagedResultDto<TransactionResponseDto>> {
+    ): ApiResult<TransactionPagedResultDto> {
         val result = accountApiService.getAllAccountTransactionsByCustomer(
             accountId = accountId,
-            path = path,
+            page = page,
             size = size,
             transactionStatus = transactionStatus,
             transactionType = transactionType,
@@ -108,16 +110,16 @@ class AccountRepositoryImpl(
 
     override suspend fun getAllAccountTransactionByEmployee(
         accountId: Long,
-        path: Int?,
+        page: Int?,
         size: Int?,
         transactionStatus: TransactionStatus?,
         transactionType: TransactionType?,
         fromDate: String?,
         toDate: String?
-    ): ApiResult<PagedResultDto<TransactionResponseDto>> {
+    ): ApiResult<TransactionPagedResultDto> {
         val result = accountApiService.getAllAccountTransactionsByEmployee(
             accountId = accountId,
-            path = path,
+            page = page,
             size = size,
             transactionStatus = transactionStatus,
             transactionType = transactionType,
@@ -129,16 +131,16 @@ class AccountRepositoryImpl(
 
     override suspend fun getAllTransactionsByEmployee(
         customerId: Long,
-        path: Int?,
+        page: Int?,
         size: Int?,
         transactionStatus: TransactionStatus?,
         transactionType: TransactionType?,
         fromDate: String?,
         toDate: String?
-    ): ApiResult<PagedResultDto<TransactionResponseDto>> {
+    ): ApiResult<TransactionPagedResultDto> {
         val result = accountApiService.getAllTransactionByEmployee(
             customerId = customerId,
-            path = path,
+            page = page,
             size = size,
             transactionStatus = transactionStatus,
             transactionType = transactionType,

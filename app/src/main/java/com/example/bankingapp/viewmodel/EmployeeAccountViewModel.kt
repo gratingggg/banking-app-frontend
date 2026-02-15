@@ -1,15 +1,16 @@
 package com.example.bankingapp.viewmodel
 
+import android.R.attr.path
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.bankingapp.models.transactions.TransactionPagedResultDto
 import com.example.bankingapp.models.account.AccountBalanceResponseDto
 import com.example.bankingapp.models.account.AccountRequestDto
 import com.example.bankingapp.models.account.AccountResponseDto
 import com.example.bankingapp.models.account.AccountSummaryDto
 import com.example.bankingapp.models.exception.ErrorResponse
+import com.example.bankingapp.models.transactions.TransactionPagedResultDto
 import com.example.bankingapp.models.transactions.TransactionResponseDto
-import com.example.bankingapp.repository.account.CustomerAccountRepository
+import com.example.bankingapp.repository.account.EmployeeAccountRepository
 import com.example.bankingapp.utils.ApiResult
 import com.example.bankingapp.utils.TransactionStatus
 import com.example.bankingapp.utils.TransactionType
@@ -17,18 +18,19 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-class CustomerAccountViewModel(
-    private val customerAccountRepository: CustomerAccountRepository
-) : ViewModel() {
-    private val _uiState = MutableStateFlow(CustomerAccountUiState())
-    val uiState: StateFlow<CustomerAccountUiState> = _uiState
+class EmployeeAccountViewModel(
+    private val employeeAccountRepository: EmployeeAccountRepository
+): ViewModel(){
+    private val _uiState = MutableStateFlow(EmployeeAccountUiState())
+    val uiState: StateFlow<EmployeeAccountUiState> = _uiState
 
     private val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
 
-    fun getAllAccounts() {
+    fun getAllAccounts(customerId: Long) {
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
@@ -37,7 +39,7 @@ class CustomerAccountViewModel(
             }
 
             _uiState.update {
-                when (val result = customerAccountRepository.getAllAccountsByCustomer()) {
+                when (val result = employeeAccountRepository.getAllAccountsByEmployee(customerId)) {
                     is ApiResult.Failure -> it.copy(
                         errorAccountsList = result.error,
                         isLoadingAccounts = false
@@ -66,7 +68,7 @@ class CustomerAccountViewModel(
 
             _uiState.update {
                 when (val result =
-                    customerAccountRepository.getParticularAccountByCustomer(accountId)) {
+                    employeeAccountRepository.getParticularAccountByEmployee(accountId)) {
                     is ApiResult.Failure -> {
                         it.copy(
                             errorSelectedAccount = result.error,
@@ -95,32 +97,32 @@ class CustomerAccountViewModel(
             _uiState.update {
                 it.copy(
                     accountTransactions = null,
-                    isLoadingTransactions = true
+                    isLoadingAccountTransactions = true
                 )
             }
 
             _uiState.update {
-                when (val result = customerAccountRepository.getAllAccountTransactionsByCustomer(
+                when (val result = employeeAccountRepository.getAllAccountTransactionByEmployee(
                     accountId = accountId, path = path, size = size,
                     transactionStatus = transactionStatus, transactionType = transactionType,
                     fromDate = fromDate?.format(formatter), toDate = toDate?.format(formatter)
                 )) {
                     is ApiResult.Failure -> it.copy(
-                        errorGetTransaction = result.error,
-                        isLoadingTransactions = false
+                        errorGetAccountTransaction = result.error,
+                        isLoadingAccountTransactions = false
                     )
 
                     is ApiResult.Success -> it.copy(
                         accountTransactions = result.data,
-                        errorGetTransaction = null,
-                        isLoadingTransactions = false
+                        errorGetAccountTransaction = null,
+                        isLoadingAccountTransactions = false
                     )
                 }
             }
         }
     }
 
-    fun createAccount(accountRequestDto: AccountRequestDto) {
+    fun createAccount(customerId: Long, accountRequestDto: AccountRequestDto) {
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
@@ -129,7 +131,7 @@ class CustomerAccountViewModel(
                 )
             }
 
-            val result = customerAccountRepository.createAccountByCustomer(accountRequestDto)
+            val result = employeeAccountRepository.createAccountByEmployee(customerId, accountRequestDto)
 
             _uiState.update {
 
@@ -158,7 +160,7 @@ class CustomerAccountViewModel(
                 )
             }
 
-            val result = customerAccountRepository.deleteAccountByCustomer(accountId)
+            val result = employeeAccountRepository.deleteAccountByEmployee(accountId)
 
             _uiState.update {
                 when (result) {
@@ -186,7 +188,7 @@ class CustomerAccountViewModel(
                 )
             }
 
-            val result = customerAccountRepository.getBalanceByCustomer(accountId)
+            val result = employeeAccountRepository.getAccountBalanceByEmployee(accountId)
 
             _uiState.update {
                 when (result) {
@@ -204,28 +206,128 @@ class CustomerAccountViewModel(
             }
         }
     }
+
+    fun getCustomerTransactions(
+        customerId: Long, path: Int? = null, size: Int? = null,
+        transactionStatus: TransactionStatus? = null, transactionType: TransactionType? = null,
+        fromDate: LocalDate? = null, toDate: LocalDate? = null
+    ){
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(
+                    isLoadingCustomerTransactions = true,
+                    customerTransactions = null
+                )
+            }
+
+            _uiState.update {
+                when (val result = employeeAccountRepository.getAllTransactionsByEmployee(
+                    customerId = customerId, path = path, size = size,
+                    transactionStatus = transactionStatus, transactionType = transactionType,
+                    fromDate = fromDate?.format(formatter), toDate = toDate?.format(formatter)
+                )) {
+                    is ApiResult.Failure -> it.copy(
+                        errorGetCustomerTransactions = result.error,
+                        isLoadingCustomerTransactions = false
+                    )
+
+                    is ApiResult.Success -> it.copy(
+                        customerTransactions = result.data,
+                        errorGetCustomerTransactions = null,
+                        isLoadingCustomerTransactions = false
+                    )
+                }
+            }
+        }
+    }
+
+    fun deposit(accountId: Long, amountStr: String){
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(
+                    isDepositing = true,
+                    deposit = null
+                )
+            }
+
+            val amount = BigDecimal(amountStr)
+            val result = employeeAccountRepository.deposit(accountId, amount)
+
+            _uiState.update {
+                when(result){
+                    is ApiResult.Failure -> it.copy(
+                        errorDeposit = result.error,
+                        isDepositing = false
+                    )
+
+                    is ApiResult.Success -> it.copy(
+                        deposit = result.data,
+                        errorDeposit = null,
+                        isDepositing = false
+                    )
+                }
+            }
+        }
+    }
+
+    fun withdraw(accountId: Long, amountStr: String){
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(
+                    isWithdrawing = true,
+                    withdraw = null
+                )
+            }
+
+            val amount = BigDecimal(amountStr)
+            val result = employeeAccountRepository.withdraw(accountId, amount)
+
+            _uiState.update {
+                when(result){
+                    is ApiResult.Failure -> it.copy(
+                        errorWithdraw = result.error,
+                        isWithdrawing = false
+                    )
+
+                    is ApiResult.Success -> it.copy(
+                        withdraw = result.data,
+                        errorWithdraw = null,
+                        isWithdrawing = false
+                    )
+                }
+            }
+        }
+    }
 }
 
-
-data class CustomerAccountUiState(
+data class EmployeeAccountUiState(
     val accountsList: List<AccountSummaryDto> = emptyList<AccountSummaryDto>(),
     val selectedAccount: AccountResponseDto? = null,
     val createdAccount: AccountResponseDto? = null,
     val deletedAccount: AccountResponseDto? = null,
     val accountTransactions: TransactionPagedResultDto? = null,
+    val customerTransactions: TransactionPagedResultDto? = null,
     val balance: AccountBalanceResponseDto? = null,
+    val deposit: TransactionResponseDto? = null,
+    val withdraw: TransactionResponseDto? = null,
 
     val isLoadingAccounts: Boolean = false,
     val isLoadingSelectedAccountDetails: Boolean = false,
     val isCreatingAccount: Boolean = false,
     val isDeletingAccount: Boolean = false,
-    val isLoadingTransactions: Boolean = false,
+    val isLoadingAccountTransactions: Boolean = false,
+    val isLoadingCustomerTransactions: Boolean = false,
     val isLoadingBalance: Boolean = false,
+    val isDepositing: Boolean = false,
+    val isWithdrawing: Boolean = false,
 
     val errorAccountsList: ErrorResponse? = null,
     val errorSelectedAccount: ErrorResponse? = null,
     val errorCreatedAccount: ErrorResponse? = null,
     val errorDeletedAccount: ErrorResponse? = null,
-    val errorGetTransaction: ErrorResponse? = null,
-    val errorGetBalance: ErrorResponse? = null
+    val errorGetAccountTransaction: ErrorResponse? = null,
+    val errorGetBalance: ErrorResponse? = null,
+    val errorGetCustomerTransactions: ErrorResponse? = null,
+    val errorDeposit: ErrorResponse? = null,
+    val errorWithdraw: ErrorResponse? = null
 )

@@ -11,15 +11,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import com.example.bankingapp.models.account.AccountRequestDto
 import com.example.bankingapp.utils.AccountType
-import com.example.bankingapp.viewmodel.CustomerAccountViewModel
+import com.example.bankingapp.viewmodel.EmployeeAccountViewModel
+
 
 @Composable
-fun TestingCustomerAccountApi(viewModel: CustomerAccountViewModel) {
+fun TestingEmployeeAccountApi(viewModel: EmployeeAccountViewModel) {
     val state by viewModel.uiState.collectAsState()
 
     var accountId by remember {
         mutableLongStateOf(234)
     }
+
+    val customerId: Long = 1
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -30,7 +33,7 @@ fun TestingCustomerAccountApi(viewModel: CustomerAccountViewModel) {
             errorAccountsList = state.errorAccountsList,
             accountsList = state.accountsList,
             onGetAllAccounts = {
-                viewModel.getAllAccounts()
+                viewModel.getAllAccounts(customerId)
             }
         ) {
             accountId = it
@@ -45,8 +48,8 @@ fun TestingCustomerAccountApi(viewModel: CustomerAccountViewModel) {
         }
 
         TestingGetAllAccountTransactions(
-            isLoadingTransactions = state.isLoadingTransactions,
-            errorGetTransaction = state.errorGetTransaction,
+            isLoadingTransactions = state.isLoadingAccountTransactions,
+            errorGetTransaction = state.errorGetAccountTransaction,
             accountTransactions = state.accountTransactions
         ) {
             viewModel.getAllAccountTransactions(accountId)
@@ -58,7 +61,8 @@ fun TestingCustomerAccountApi(viewModel: CustomerAccountViewModel) {
             createdAccount = state.createdAccount,
             onCreateAccount = {
                 viewModel.createAccount(
-                    AccountRequestDto(
+                    customerId = customerId,
+                    accountRequestDto = AccountRequestDto(
                         accountType = AccountType.CURRENT
                     )
                 )
@@ -81,6 +85,30 @@ fun TestingCustomerAccountApi(viewModel: CustomerAccountViewModel) {
             balance = state.balance
         ) {
             viewModel.getAccountBalance(accountId)
+        }
+
+        TestingGetCustomerTransactionByEmployee(
+            isLoadingTransactions = state.isLoadingCustomerTransactions,
+            errorGetTransaction = state.errorGetCustomerTransactions,
+            transactions = state.customerTransactions
+        ) {
+            viewModel.getCustomerTransactions(customerId)
+        }
+
+        TestingDeposit(
+            isDepositing = state.isDepositing,
+            errorDeposit = state.errorDeposit,
+            deposit = state.deposit
+        ) {
+            viewModel.deposit(accountId, "2000")
+        }
+
+        TestingWithdraw(
+            isWithdrawing = state.isWithdrawing,
+            errorWithdraw = state.errorWithdraw,
+            withdraw = state.withdraw
+        ) {
+            viewModel.withdraw(accountId, "1000")
         }
     }
 }

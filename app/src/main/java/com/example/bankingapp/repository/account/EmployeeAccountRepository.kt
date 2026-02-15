@@ -1,6 +1,6 @@
 package com.example.bankingapp.repository.account
 
-import com.example.bankingapp.models.PagedResultDto
+import com.example.bankingapp.models.transactions.TransactionPagedResultDto
 import com.example.bankingapp.models.account.AccountBalanceResponseDto
 import com.example.bankingapp.models.account.AccountRequestDto
 import com.example.bankingapp.models.account.AccountResponseDto
@@ -23,13 +23,13 @@ interface EmployeeAccountRepository {
     suspend fun getAllAccountTransactionByEmployee(accountId: Long, path: Int? = null, size: Int? = null,
                                                    transactionStatus: TransactionStatus? = null, transactionType: TransactionType? = null,
                                                    fromDate: String? = null, toDate: String? = null
-    ): ApiResult<PagedResultDto<TransactionResponseDto>>
+    ): ApiResult<TransactionPagedResultDto>
 
     suspend fun getAllTransactionsByEmployee(
         customerId: Long, path: Int? = null, size: Int? = null,
         transactionStatus: TransactionStatus? = null, transactionType: TransactionType? = null,
         fromDate: String? = null, toDate: String? = null
-    ): ApiResult<PagedResultDto<TransactionResponseDto>>
+    ): ApiResult<TransactionPagedResultDto>
 
     suspend fun getAccountBalanceByEmployee(accountId: Long): ApiResult<AccountBalanceResponseDto>
 
