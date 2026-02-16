@@ -1,5 +1,6 @@
 package com.example.bankingapp.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bankingapp.models.exception.ErrorResponse
@@ -19,6 +20,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import java.math.BigDecimal
 import java.time.LocalDate
 
 class EmployeeLoanViewModel(
@@ -27,14 +29,21 @@ class EmployeeLoanViewModel(
     private val _uiState = MutableStateFlow(EmployeeLoanUiState())
     val uiState: StateFlow<EmployeeLoanUiState> = _uiState
 
-    fun createLoan(accountId: Long, loanRequestDto: LoanRequestDto){
+    fun createLoan(accountId: Long, tenureInMonths: Int,
+                   loanTypeStr: String, principalAmountStr: String){
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
-                    isCreatingLoan = true,
-                    createdLoan = null
+                    isCreatingLoan = true
                 )
             }
+
+            val loanRequestDto = LoanRequestDto(
+                accountId = accountId,
+                tenureInMonths = tenureInMonths,
+                loanType = LoanType.valueOf(loanTypeStr),
+                principalAmount = BigDecimal(principalAmountStr)
+            )
 
             _uiState.update {
                 when(val result = employeeLoanRepository.createLoanByEmployee(accountId, loanRequestDto)){
@@ -53,17 +62,16 @@ class EmployeeLoanViewModel(
         }
     }
 
-    fun getAllLoans(customerId: Long, page: Int? = null, size: Int? = null, loanStatus: LoanStatus? = null,
+    fun getAllCustomerLoans(customerId: Long, page: Int? = null, size: Int? = null, loanStatus: LoanStatus? = null,
         loanType: LoanType? = null, fromDate: LocalDate? = null, toDate: LocalDate? = null){
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
-                    allLoans = null,
-                    isLoadingLoans = true
+                    isLoadingCustomerLoans = true
                 )
             }
 
-            val result = employeeLoanRepository.getAllLoansByEmployee(
+            val result = employeeLoanRepository.getAllCustomerLoansByEmployee(
                 customerId = customerId, page = page, size = size, loanStatus = loanStatus,
                 loanType = loanType, fromDate = fromDate, toDate = toDate
             )
@@ -71,14 +79,14 @@ class EmployeeLoanViewModel(
             _uiState.update {
                 when(result){
                     is ApiResult.Failure -> it.copy(
-                        errorAllLoans = result.error,
-                        isLoadingLoans = false
+                        errorAllCustomerLoans = result.error,
+                        isLoadingCustomerLoans = false
                     )
 
                     is ApiResult.Success -> it.copy(
-                        allLoans = result.data,
-                        errorAllLoans = null,
-                        isLoadingLoans = false
+                        allCustomerLoans = result.data,
+                        errorAllCustomerLoans = null,
+                        isLoadingCustomerLoans = false
                     )
                 }
             }
@@ -89,8 +97,7 @@ class EmployeeLoanViewModel(
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
-                    isLoadingLoanDetails = true,
-                    selectedLoan = null
+                    isLoadingLoanDetails = true
                 )
             }
 
@@ -116,8 +123,7 @@ class EmployeeLoanViewModel(
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
-                    isLoadingTransactions = true,
-                    loanTransactions = null
+                    isLoadingTransactions = true
                 )
             }
 
@@ -142,21 +148,56 @@ class EmployeeLoanViewModel(
             }
         }
     }
+
+    fun getAllLoans(page: Int? = null, size: Int? = null, loanStatus: LoanStatus? = null,
+                            loanType: LoanType? = null, fromDate: LocalDate? = null, toDate: LocalDate? = null){
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(
+                    isLoadingLoans = true
+                )
+            }
+
+            val result = employeeLoanRepository.getAllLoansByEmployee(
+                page = page, size = size, loanStatus = loanStatus,
+                loanType = loanType, fromDate = fromDate, toDate = toDate
+            )
+
+            _uiState.update {
+                when(result){
+                    is ApiResult.Failure -> it.copy(
+                        errorAllLoans = result.error,
+                        isLoadingLoans = false
+                    )
+
+                    is ApiResult.Success -> it.copy(
+                        allLoans = result.data,
+                        errorAllLoans = null,
+                        isLoadingLoans = false
+                    )
+                }
+            }
+        }
+    }
 }
 
 data class EmployeeLoanUiState(
     val createdLoan: LoanResponseDto? = null,
-    val allLoans: LoanPagedResultDto? = null,
+    val allCustomerLoans: LoanPagedResultDto? = null,
     val loanTransactions: TransactionPagedResultDto? = null,
     val selectedLoan: LoanResponseDto? = null,
+    val allLoans: LoanPagedResultDto? = null,
+
 
     val isCreatingLoan: Boolean = false,
-    val isLoadingLoans: Boolean = false,
+    val isLoadingCustomerLoans: Boolean = false,
     val isLoadingTransactions: Boolean = false,
     val isLoadingLoanDetails: Boolean = false,
+    val isLoadingLoans: Boolean = false,
 
     val errorCreateLoan: ErrorResponse? = null,
-    val errorAllLoans: ErrorResponse? = null,
+    val errorAllCustomerLoans: ErrorResponse? = null,
     val errorTransactions: ErrorResponse? = null,
-    val errorSelectedLoan: ErrorResponse? = null
+    val errorSelectedLoan: ErrorResponse? = null,
+    val errorAllLoans: ErrorResponse? = null
 )

@@ -16,7 +16,7 @@ interface CustomerLoanRepository {
 
     suspend fun repayLoan(loanRepaymentDto: LoanRepaymentDto): ApiResult<TransactionResponseDto>
 
-    suspend fun getAllLoans(
+    suspend fun getAllLoansByCustomer(
         page: Int? = null,
         size: Int? = null,
         loanStatus: LoanStatus? = null,

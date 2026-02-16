@@ -21,7 +21,7 @@ import com.example.bankingapp.models.transactions.TransactionResponseDto
 fun TestingGetAllAccounts(
     isLoadingAccounts: Boolean,
     errorAccountsList: ErrorResponse?,
-    accountsList: List<AccountSummaryDto>,
+    accountsList: List<AccountSummaryDto> = emptyList(),
     onGetAllAccounts: () -> Unit,
     onAccountExist: (Long) -> Unit
 ) {
@@ -42,14 +42,17 @@ fun TestingGetAllAccounts(
                 errorAccountsList != null -> "Error : $errorAccountsList"
                 accountsList.isEmpty() -> "No accounts"
                 else -> {
-                    val account = accountsList.first()
-                    onAccountExist(account.accountId)
-                    account.toString()
+                    accountsList.toString()
                 }
             }
         )
     }
 
+    if(accountsList.isNotEmpty()){
+        LaunchedEffect(accountsList) {
+            onAccountExist(accountsList.last().accountId)
+        }
+    }
 }
 
 @Composable

@@ -11,8 +11,8 @@ object Endpoints {
 
 
     const val EMPLOYEE_ME = "/api/employee/me";
-    const val EMPLOYEE_LOANS_PENDING = "/api/employee/loans/pending";
     const val EMPLOYEE_LOANS_PROCESS = "/api/employee/loans/{loanId}/process";
+    const val EMPLOYEE_LOANS_DISBURSE = "/api/employee/loans/{loanId}/disburse";
 
 
 
@@ -42,10 +42,10 @@ object Endpoints {
     const val CUSTOMER_LOAN_TRANSACTIONS = "/api/customer/loan/{loanId}/transactions";
 
     const val EMPLOYEE_LOAN_APPLY = "/api/employee/customer/account/{accountId}/loan/apply";
-    const val EMPLOYEE_LOAN_ALL = "/api/employee/customer/{customerId}/loan";
+    const val EMPLOYEE_CUSTOMER_LOAN_ALL = "/api/employee/customer/{customerId}/loan";
     const val EMPLOYEE_LOAN_PARTICULAR = "/api/employee/customer/loan/{loanId}";
     const val EMPLOYEE_LOAN_TRANSACTIONS = "/api/employee/customer/loan/{loanId}/transactions";
-
+    const val EMPLOYEE_LOAN_ALL = "/api/employee/customer/loan/all"
 
 
     const val TRANSACTIONS_CUSTOMER_TRANSFER = "/api/customer/transactions/transfer";

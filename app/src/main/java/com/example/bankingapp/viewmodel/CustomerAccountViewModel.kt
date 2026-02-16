@@ -10,6 +10,7 @@ import com.example.bankingapp.models.account.AccountSummaryDto
 import com.example.bankingapp.models.exception.ErrorResponse
 import com.example.bankingapp.models.transactions.TransactionResponseDto
 import com.example.bankingapp.repository.account.CustomerAccountRepository
+import com.example.bankingapp.utils.AccountType
 import com.example.bankingapp.utils.ApiResult
 import com.example.bankingapp.utils.TransactionStatus
 import com.example.bankingapp.utils.TransactionType
@@ -59,7 +60,6 @@ class CustomerAccountViewModel(
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
-                    selectedAccount = null,
                     isLoadingSelectedAccountDetails = true
                 )
             }
@@ -94,7 +94,6 @@ class CustomerAccountViewModel(
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
-                    accountTransactions = null,
                     isLoadingTransactions = true
                 )
             }
@@ -120,14 +119,17 @@ class CustomerAccountViewModel(
         }
     }
 
-    fun createAccount(accountRequestDto: AccountRequestDto) {
+    fun createAccount(accountTypeStr: String) {
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
-                    isCreatingAccount = true,
-                    createdAccount = null
+                    isCreatingAccount = true
                 )
             }
+
+            val accountRequestDto = AccountRequestDto(
+                accountType = AccountType.valueOf(accountTypeStr)
+            )
 
             val result = customerAccountRepository.createAccountByCustomer(accountRequestDto)
 
@@ -153,8 +155,7 @@ class CustomerAccountViewModel(
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
-                    isDeletingAccount = true,
-                    deletedAccount = null
+                    isDeletingAccount = true
                 )
             }
 
@@ -181,8 +182,7 @@ class CustomerAccountViewModel(
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
-                    isLoadingBalance = true,
-                    balance = null
+                    isLoadingBalance = true
                 )
             }
 

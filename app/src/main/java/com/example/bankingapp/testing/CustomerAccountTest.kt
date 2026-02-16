@@ -58,9 +58,7 @@ fun TestingCustomerAccountApi(viewModel: CustomerAccountViewModel) {
             createdAccount = state.createdAccount,
             onCreateAccount = {
                 viewModel.createAccount(
-                    AccountRequestDto(
-                        accountType = AccountType.CURRENT
-                    )
+                    accountTypeStr = "CURRENT"
                 )
             }
         ) {

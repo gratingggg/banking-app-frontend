@@ -1,5 +1,6 @@
 package com.example.bankingapp.repository.loan
 
+import android.util.Log
 import com.example.bankingapp.models.exception.ErrorResponse
 import com.example.bankingapp.models.loan.LoanPagedResultDto
 import com.example.bankingapp.models.loan.LoanRepaymentDto
@@ -47,7 +48,7 @@ class LoanRepositoryImpl (
         return helper(result)
     }
 
-    override suspend fun getAllLoans(
+    override suspend fun getAllLoansByCustomer(
         page: Int?,
         size: Int?,
         loanStatus: LoanStatus?,
@@ -100,7 +101,7 @@ class LoanRepositoryImpl (
         return helper(result)
     }
 
-    override suspend fun getAllLoansByEmployee(
+    override suspend fun getAllCustomerLoansByEmployee(
         customerId: Long,
         page: Int?,
         size: Int?,
@@ -147,5 +148,23 @@ class LoanRepositoryImpl (
         return helper(result)
     }
 
+    override suspend fun getAllLoansByEmployee(
+        page: Int?,
+        size: Int?,
+        loanStatus: LoanStatus?,
+        loanType: LoanType?,
+        fromDate: LocalDate?,
+        toDate: LocalDate?
+    ): ApiResult<LoanPagedResultDto> {
+        val result = loanApiService.getAllLoans(
+            page = page,
+            size = size,
+            loanStatus = loanStatus,
+            loanType = loanType,
+            fromDate = fromDate,
+            toDate = toDate
+        )
+        return helper(result)
+    }
 }
 

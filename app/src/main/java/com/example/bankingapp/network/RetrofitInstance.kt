@@ -48,6 +48,8 @@ object RetrofitInstance {
     val registerApiService: RegisterApiService = retrofit.create(RegisterApiService::class.java)
     val accountApiService: AccountApiService = retrofit.create(AccountApiService::class.java)
     val loanApiService: LoanApiService = retrofit.create(LoanApiService::class.java)
+    val employeeApiService: EmployeeApiService = retrofit.create(EmployeeApiService::class.java)
+    val customerApiService: CustomerApiService = retrofit.create(CustomerApiService::class.java)
 
     fun parseError(errorBody: ResponseBody?): ErrorResponse? {
         val clazz = ErrorResponse::class.java

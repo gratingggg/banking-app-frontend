@@ -6,5 +6,5 @@ import java.math.BigDecimal
 @JsonClass(generateAdapter = true)
 data class LoanRepaymentDto(
     val loanId: Long,
-    val repayAmount: BigDecimal
+    val amount: BigDecimal
 )

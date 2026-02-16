@@ -11,12 +11,13 @@ import java.time.LocalDate
 data class LoanResponseDto(
     val loanId: Long,
     val accountId: Long,
-    val dateOfIssuance: LocalDate,
+    val dateOfIssuance: LocalDate?,
     val tenureInMonths: Int,
-    val dateOfRepayment: LocalDate,
+    val dateOfRepayment: LocalDate?,
     val loanType: LoanType,
     val loanStatus: LoanStatus,
     val principalAmount: BigDecimal,
     val rateOfInterest: BigDecimal,
-    val emi: BigDecimal
+    val emi: BigDecimal,
+    val outstandingAmount: BigDecimal?
 )

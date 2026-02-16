@@ -62,9 +62,7 @@ fun TestingEmployeeAccountApi(viewModel: EmployeeAccountViewModel) {
             onCreateAccount = {
                 viewModel.createAccount(
                     customerId = customerId,
-                    accountRequestDto = AccountRequestDto(
-                        accountType = AccountType.CURRENT
-                    )
+                    accountTypeStr = "CURRENT"
                 )
             }
         ) {

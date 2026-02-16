@@ -18,7 +18,7 @@ import com.example.bankingapp.viewmodel.LoginState
 
 
 @Composable
-fun TestingAuthApi(viewModel: AuthViewModel){
+fun TestingAuthApi(viewModel: AuthViewModel, username: String){
     val state by viewModel.loginState.collectAsState()
 
     Column(
@@ -27,7 +27,7 @@ fun TestingAuthApi(viewModel: AuthViewModel){
     ) {
         Button(
             onClick = {
-                viewModel.login("rudra", "rudra")
+                viewModel.login(username, "rudra")
             }) {
             Text(text = "Login",
                 fontSize = 20.sp,

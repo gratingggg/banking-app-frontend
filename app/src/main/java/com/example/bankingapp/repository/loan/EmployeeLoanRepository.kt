@@ -14,7 +14,7 @@ interface EmployeeLoanRepository {
         accountId: Long, loanRequestDto: LoanRequestDto
     ): ApiResult<LoanResponseDto>
 
-    suspend fun getAllLoansByEmployee(
+    suspend fun getAllCustomerLoansByEmployee(
         customerId: Long,
         page: Int? = null,
         size: Int? = null,
@@ -35,4 +35,13 @@ interface EmployeeLoanRepository {
         fromDate: LocalDate? = null,
         toDate: LocalDate? = null
     ): ApiResult<TransactionPagedResultDto>
+
+    suspend fun getAllLoansByEmployee(
+        page: Int? = null,
+        size: Int? = null,
+        loanStatus: LoanStatus? = null,
+        loanType: LoanType? = null,
+        fromDate: LocalDate? = null,
+        toDate: LocalDate? = null
+    ): ApiResult<LoanPagedResultDto>
 }

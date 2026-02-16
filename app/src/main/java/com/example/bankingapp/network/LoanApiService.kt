@@ -36,9 +36,10 @@ interface LoanApiService {
 
     @GET(Endpoints.CUSTOMER_LOAN_PARTICULAR)
     suspend fun getParticularLoanByCustomer(@Path("loanId") loanId: Long): Response<LoanResponseDto>
+
     @GET(Endpoints.CUSTOMER_LOAN_TRANSACTIONS)
     suspend fun getLoanTransactionsByCustomer(
-        @Query("loanId") loanId: Long,
+        @Path("loanId") loanId: Long,
         @Query("page") page: Int? = null,
         @Query("size") size: Int? = null,
         @Query("status") loanStatus: LoanStatus? = null,
@@ -53,9 +54,9 @@ interface LoanApiService {
         @Body loanRequestDto: LoanRequestDto
     ): Response<LoanResponseDto>
 
-    @GET(Endpoints.EMPLOYEE_LOAN_ALL)
+    @GET(Endpoints.EMPLOYEE_CUSTOMER_LOAN_ALL)
     suspend fun getAllLoansByEmployee(
-        @Query("customerId") customerId: Long,
+        @Path("customerId") customerId: Long,
         @Query("page") page: Int? = null,
         @Query("size") size: Int? = null,
         @Query("status") loanStatus: LoanStatus? = null,
@@ -69,7 +70,7 @@ interface LoanApiService {
 
     @GET(Endpoints.EMPLOYEE_LOAN_TRANSACTIONS)
     suspend fun getLoanTransactionsByEmployee(
-        @Query("loanId") loanId: Long,
+        @Path("loanId") loanId: Long,
         @Query("page") page: Int? = null,
         @Query("size") size: Int? = null,
         @Query("status") loanStatus: LoanStatus? = null,
@@ -77,4 +78,14 @@ interface LoanApiService {
         @Query("fromDate") fromDate: LocalDate? = null,
         @Query("toDate") toDate: LocalDate? = null
     ): Response<TransactionPagedResultDto>
+
+    @GET(Endpoints.EMPLOYEE_LOAN_ALL)
+    suspend fun getAllLoans(
+        @Query("page") page: Int? = null,
+        @Query("size") size: Int? = null,
+        @Query("status") loanStatus: LoanStatus? = null,
+        @Query("type") loanType: LoanType? = null,
+        @Query("fromDate") fromDate: LocalDate? = null,
+        @Query("toDate") toDate: LocalDate? = null
+    ): Response<LoanPagedResultDto>
 }

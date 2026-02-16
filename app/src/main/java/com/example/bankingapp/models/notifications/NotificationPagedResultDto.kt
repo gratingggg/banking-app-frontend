@@ -1,9 +1,8 @@
 package com.example.bankingapp.models.notifications
 
+import com.example.bankingapp.utils.Page
+
 data class NotificationPagedResultDto (
     val content: List<NotificationResponseDto>,
-    val number: Int,
-    val size: Int,
-    val totalPages: Int,
-    val totalElements: Int
+    val page: Page
 )

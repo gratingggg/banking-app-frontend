@@ -11,6 +11,7 @@ import com.example.bankingapp.models.exception.ErrorResponse
 import com.example.bankingapp.models.transactions.TransactionPagedResultDto
 import com.example.bankingapp.models.transactions.TransactionResponseDto
 import com.example.bankingapp.repository.account.EmployeeAccountRepository
+import com.example.bankingapp.utils.AccountType
 import com.example.bankingapp.utils.ApiResult
 import com.example.bankingapp.utils.TransactionStatus
 import com.example.bankingapp.utils.TransactionType
@@ -61,7 +62,6 @@ class EmployeeAccountViewModel(
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
-                    selectedAccount = null,
                     isLoadingSelectedAccountDetails = true
                 )
             }
@@ -96,7 +96,6 @@ class EmployeeAccountViewModel(
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
-                    accountTransactions = null,
                     isLoadingAccountTransactions = true
                 )
             }
@@ -122,14 +121,17 @@ class EmployeeAccountViewModel(
         }
     }
 
-    fun createAccount(customerId: Long, accountRequestDto: AccountRequestDto) {
+    fun createAccount(customerId: Long, accountTypeStr: String) {
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
-                    isCreatingAccount = true,
-                    createdAccount = null
+                    isCreatingAccount = true
                 )
             }
+
+            val accountRequestDto = AccountRequestDto(
+                accountType = AccountType.valueOf(accountTypeStr)
+            )
 
             val result = employeeAccountRepository.createAccountByEmployee(customerId, accountRequestDto)
 
@@ -155,8 +157,7 @@ class EmployeeAccountViewModel(
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
-                    isDeletingAccount = true,
-                    deletedAccount = null
+                    isDeletingAccount = true
                 )
             }
 
@@ -183,8 +184,7 @@ class EmployeeAccountViewModel(
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
-                    isLoadingBalance = true,
-                    balance = null
+                    isLoadingBalance = true
                 )
             }
 
@@ -215,8 +215,7 @@ class EmployeeAccountViewModel(
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
-                    isLoadingCustomerTransactions = true,
-                    customerTransactions = null
+                    isLoadingCustomerTransactions = true
                 )
             }
 
@@ -245,8 +244,7 @@ class EmployeeAccountViewModel(
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
-                    isDepositing = true,
-                    deposit = null
+                    isDepositing = true
                 )
             }
 
@@ -274,8 +272,7 @@ class EmployeeAccountViewModel(
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
-                    isWithdrawing = true,
-                    withdraw = null
+                    isWithdrawing = true
                 )
             }
 
