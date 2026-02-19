@@ -2,6 +2,8 @@ package com.example.bankingapp.testing
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -10,6 +12,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.bankingapp.models.account.AccountRequestDto
 import com.example.bankingapp.models.loan.LoanRequestDto
 import com.example.bankingapp.utils.AccountType
@@ -34,6 +39,11 @@ fun TestingCustomerLoanApi(viewModel: CustomerLoanViewModel) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+        Text(
+            text = "CUSTOMER LOAN START",
+            fontSize = 20.sp,
+            modifier = Modifier.padding(16.dp)
+        )
         TestingGetAllLoans(
             isLoadingLoans = state.isLoadingLoans,
             errorAllLoans = state.errorAllLoans,
@@ -87,5 +97,11 @@ fun TestingCustomerLoanApi(viewModel: CustomerLoanViewModel) {
         ) {
             viewModel.getLoanTransactions(loanId = loanId)
         }
+
+        Text(
+            text = "CUSTOMER LOAN END",
+            fontSize = 20.sp,
+            modifier = Modifier.padding(16.dp)
+        )
     }
 }

@@ -33,3 +33,7 @@ google-services.json
 
 # Android profiling
 *.hprof
+
+#Images
+*.jpg
+*.png

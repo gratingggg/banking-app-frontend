@@ -27,15 +27,15 @@ fun TestingRegisterApi(viewModel: RegisterViewModel){
         Button(
             onClick = {
                 viewModel.register(
-                    name = "Rudra",
-                    email = "rudra@gmail.com",
-                    phoneNumber = "1231231234",
-                    dateOfBirthStr = "25-02-2007",
+                    name = "Aditya",
+                    email = "aditya@gmail.com",
+                    phoneNumber = "1232323524",
+                    dateOfBirthStr = "25-02-2006",
                     address = "India",
                     genderStr = "MALE",
-                    username = "rudra",
-                    password = "rudra",
-                    aadharNo = "123123123123"
+                    username = "aditya",
+                    password = "aditya",
+                    aadharNo = "123124022213"
                 )
             })
         {
@@ -47,7 +47,7 @@ fun TestingRegisterApi(viewModel: RegisterViewModel){
         when(val registerState = state){
             RegisterState.Idle -> {}
             RegisterState.Loading -> Text("Registration is in process..............")
-            is RegisterState.Success -> Text("Login successfull\n${registerState.data}")
+            is RegisterState.Success -> Text("Registration successfull\n${registerState.data}")
             is RegisterState.Failure -> {
                 Text("\t\tError: ${registerState.error.message}\n\t\tStatus code: ${registerState.error.statusCode}")
             }

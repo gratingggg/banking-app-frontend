@@ -89,17 +89,6 @@ interface AccountApiService {
         @Path("accountId") accountId: Long
     ): Response<AccountBalanceResponseDto>
 
-    @GET(Endpoints.EMPLOYEE_CUSTOMER_TRANSACTION_ALL)
-    suspend fun getAllTransactionByEmployee(
-        @Path("customerId") customerId: Long,
-        @Query("page") page: Int? = null,
-        @Query("size") size: Int? = null,
-        @Query("transactionStatus") transactionStatus: TransactionStatus? = null,
-        @Query("transactionType") transactionType: TransactionType? = null,
-        @Query("fromDate") fromDate: String? = null,
-        @Query("toDate") toDate: String? = null
-    ): Response<TransactionPagedResultDto>
-
     @POST(Endpoints.EMPLOYEE_ACCOUNT_DEPOSIT)
     suspend fun deposit(
         @Path("accountId") accountId: Long,

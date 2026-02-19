@@ -24,6 +24,11 @@ fun TestingEmployeeApi(viewModel: EmployeeViewModel){
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+        Text(
+            text = "=====EMPLOYEE START=====",
+            fontSize = 20.sp,
+            modifier = Modifier.padding(16.dp)
+        )
         Column {
             Button(
                 onClick = {
@@ -99,6 +104,12 @@ fun TestingEmployeeApi(viewModel: EmployeeViewModel){
                 }
             )
         }
+
+        Text(
+            text = "=====EMPLOYEE END=====",
+            fontSize = 20.sp,
+            modifier = Modifier.padding(16.dp)
+        )
     }
 }
 

@@ -129,27 +129,6 @@ class AccountRepositoryImpl(
         return helper(result)
     }
 
-    override suspend fun getAllTransactionsByEmployee(
-        customerId: Long,
-        page: Int?,
-        size: Int?,
-        transactionStatus: TransactionStatus?,
-        transactionType: TransactionType?,
-        fromDate: String?,
-        toDate: String?
-    ): ApiResult<TransactionPagedResultDto> {
-        val result = accountApiService.getAllTransactionByEmployee(
-            customerId = customerId,
-            page = page,
-            size = size,
-            transactionStatus = transactionStatus,
-            transactionType = transactionType,
-            fromDate = fromDate,
-            toDate = toDate
-        )
-        return helper(result)
-    }
-
     override suspend fun getAccountBalanceByEmployee(accountId: Long): ApiResult<AccountBalanceResponseDto> {
         val result = accountApiService.getAccountBalanceByEmployee(accountId)
         return helper(result)

@@ -1,11 +1,11 @@
 package com.example.bankingapp
 
 import android.app.Application
-import com.example.bankingapp.utils.TokenManager
+import com.example.bankingapp.network.RetrofitInstance
 
 class BankingApp: Application() {
     override fun onCreate() {
         super.onCreate()
-        TokenManager.init(this)
+        RetrofitInstance.sessionManager = SessionManager.getInstance(this)
     }
 }

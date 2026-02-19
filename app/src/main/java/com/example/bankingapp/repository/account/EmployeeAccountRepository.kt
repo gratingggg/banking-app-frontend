@@ -25,12 +25,6 @@ interface EmployeeAccountRepository {
                                                    fromDate: String? = null, toDate: String? = null
     ): ApiResult<TransactionPagedResultDto>
 
-    suspend fun getAllTransactionsByEmployee(
-        customerId: Long, path: Int? = null, size: Int? = null,
-        transactionStatus: TransactionStatus? = null, transactionType: TransactionType? = null,
-        fromDate: String? = null, toDate: String? = null
-    ): ApiResult<TransactionPagedResultDto>
-
     suspend fun getAccountBalanceByEmployee(accountId: Long): ApiResult<AccountBalanceResponseDto>
 
     suspend fun deposit(accountId: Long, amount: BigDecimal): ApiResult<TransactionResponseDto>

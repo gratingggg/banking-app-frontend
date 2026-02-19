@@ -29,7 +29,7 @@ class RegisterViewModel(
             _registerState.value = RegisterState.Loading
 
             val gender = Gender.valueOf(genderStr)
-            val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
+            val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
             val dateOfBirth = LocalDate.parse(dateOfBirthStr, formatter)
 
             val result = registerRepository.register(

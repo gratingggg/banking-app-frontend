@@ -211,36 +211,6 @@ fun TestingGetAccountBalance(
 }
 
 @Composable
-fun TestingGetCustomerTransactionByEmployee(
-    isLoadingTransactions: Boolean,
-    errorGetTransaction: ErrorResponse?,
-    transactions: TransactionPagedResultDto?,
-    onGetTransactions: () -> Unit
-) {
-    Column {
-        Button(
-            onClick = onGetTransactions
-        ) {
-            Text(
-                text = "Customer Transactions",
-                fontSize = 20.sp,
-                modifier = Modifier.padding(16.dp)
-            )
-        }
-
-        Text(
-            text = when {
-                isLoadingTransactions -> "loading transactions..........."
-                errorGetTransaction != null -> "Error : $errorGetTransaction"
-                transactions?.content?.isEmpty() == true -> "no transactions"
-                transactions?.content?.isNotEmpty() == true -> transactions.toString()
-                else -> "else"
-            }
-        )
-    }
-}
-
-@Composable
 fun TestingDeposit(
     isDepositing: Boolean,
     errorDeposit: ErrorResponse?,

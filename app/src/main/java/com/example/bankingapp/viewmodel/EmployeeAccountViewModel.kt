@@ -207,39 +207,6 @@ class EmployeeAccountViewModel(
         }
     }
 
-    fun getCustomerTransactions(
-        customerId: Long, path: Int? = null, size: Int? = null,
-        transactionStatus: TransactionStatus? = null, transactionType: TransactionType? = null,
-        fromDate: LocalDate? = null, toDate: LocalDate? = null
-    ){
-        viewModelScope.launch {
-            _uiState.update {
-                it.copy(
-                    isLoadingCustomerTransactions = true
-                )
-            }
-
-            _uiState.update {
-                when (val result = employeeAccountRepository.getAllTransactionsByEmployee(
-                    customerId = customerId, path = path, size = size,
-                    transactionStatus = transactionStatus, transactionType = transactionType,
-                    fromDate = fromDate?.format(formatter), toDate = toDate?.format(formatter)
-                )) {
-                    is ApiResult.Failure -> it.copy(
-                        errorGetCustomerTransactions = result.error,
-                        isLoadingCustomerTransactions = false
-                    )
-
-                    is ApiResult.Success -> it.copy(
-                        customerTransactions = result.data,
-                        errorGetCustomerTransactions = null,
-                        isLoadingCustomerTransactions = false
-                    )
-                }
-            }
-        }
-    }
-
     fun deposit(accountId: Long, amountStr: String){
         viewModelScope.launch {
             _uiState.update {

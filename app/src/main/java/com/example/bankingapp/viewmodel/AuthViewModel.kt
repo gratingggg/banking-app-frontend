@@ -1,8 +1,5 @@
 package com.example.bankingapp.viewmodel
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bankingapp.models.exception.ErrorResponse
@@ -17,12 +14,12 @@ import kotlinx.coroutines.launch
 class AuthViewModel(
     private val authRepository: AuthRepository
 ): ViewModel() {
-    private val _loginState = MutableStateFlow<LoginState>(LoginState.Idle)
-    val loginState: StateFlow<LoginState> = _loginState
+    private val _loginState = MutableStateFlow<LoginUiState>(LoginUiState.Idle)
+    val loginState: StateFlow<LoginUiState> = _loginState
 
     fun login(username: String, password: String){
         viewModelScope.launch {
-            _loginState.value = LoginState.Loading
+            _loginState.value = LoginUiState.Loading
 
             val result = authRepository.login(
                 LoginRequestDto(
@@ -32,16 +29,16 @@ class AuthViewModel(
             )
 
             when(result){
-                is ApiResult.Success -> _loginState.value = LoginState.Success(result.data)
-                is ApiResult.Failure -> _loginState.value = LoginState.Failure(result.error)
+                is ApiResult.Success -> _loginState.value = LoginUiState.Success(result.data)
+                is ApiResult.Failure -> _loginState.value = LoginUiState.Failure(result.error)
             }
         }
     }
 }
 
-sealed class LoginState{
-    object Idle: LoginState()
-    object Loading: LoginState()
-    data class Success(val data: LoginResponseDto): LoginState()
-    data class Failure(val error: ErrorResponse): LoginState()
+sealed class LoginUiState{
+    object Idle: LoginUiState()
+    object Loading: LoginUiState()
+    data class Success(val data: LoginResponseDto): LoginUiState()
+    data class Failure(val error: ErrorResponse): LoginUiState()
 }
