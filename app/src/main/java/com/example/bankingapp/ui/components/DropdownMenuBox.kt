@@ -61,7 +61,7 @@ fun NormalDropdownMenuBox(
                 fontSize = 18.sp,
                 fontWeight = FontWeight.SemiBold
             ),
-            modifier = Modifier.padding(bottom = 8.dp)
+            modifier = Modifier.padding(bottom = 16.dp)
         )
 
         OutlinedTextField(

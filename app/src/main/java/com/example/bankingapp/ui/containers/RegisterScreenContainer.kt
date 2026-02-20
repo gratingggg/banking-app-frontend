@@ -23,7 +23,7 @@ import com.example.bankingapp.navigation.AppDestinations
 import com.example.bankingapp.navigation.navigateAndClear
 import com.example.bankingapp.network.RetrofitInstance
 import com.example.bankingapp.repository.register.RegisterRepositoryImpl
-import com.example.bankingapp.ui.screens.customer.RegisterScreen
+import com.example.bankingapp.ui.screens.RegisterScreen
 import com.example.bankingapp.viewmodel.RegisterState
 import com.example.bankingapp.viewmodel.RegisterViewModel
 import com.example.bankingapp.viewmodel.factory.RegisterViewModelFactory

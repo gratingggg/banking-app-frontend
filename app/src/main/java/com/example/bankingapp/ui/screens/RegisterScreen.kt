@@ -1,4 +1,4 @@
-package com.example.bankingapp.ui.screens.customer
+package com.example.bankingapp.ui.screens
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -29,6 +29,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -39,7 +41,7 @@ import com.example.bankingapp.ui.components.NormalDatePicker
 import com.example.bankingapp.ui.components.NormalDropdownMenuBox
 import com.example.bankingapp.ui.components.NormalTextField
 import com.example.bankingapp.ui.components.PasswordField
-import com.example.bankingapp.ui.theme.lightCoralPink
+import com.example.bankingapp.ui.theme.coralPink
 import com.example.bankingapp.utils.Gender
 
 @Composable
@@ -87,6 +89,25 @@ fun RegisterScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Text(
+            text = "Register",
+            style = TextStyle(
+                fontSize = 55.sp,
+                fontWeight = FontWeight.Bold
+            ),
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .padding(bottom = 48.dp)
+                .drawBehind {
+                    drawLine(
+                        color = coralPink,
+                        start = Offset(0f, size.height),
+                        end = Offset(size.width, size.height),
+                        strokeWidth = 4.dp.toPx()
+                    )
+                }
+        )
+
         NormalTextField(
             fieldValue = name,
             fieldLabel = "Name",

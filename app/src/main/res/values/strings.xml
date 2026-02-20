@@ -1,4 +1,7 @@
 <resources>
-    <string name="app_name">BankingApp</string>
+    <string name="app_name">PBR</string>
     <string name="welcome_greeting">"Hey, I, the creator of this app, welcome you into this grand applications of mine."</string>
+    <string name="my_bank_name">Personal Bank of Rudra</string>
+    <string name="my_bank_name_for_account">Personal Bank of\nRudra</string>
+    <string name="check_balance">Check balance</string>
 </resources>
