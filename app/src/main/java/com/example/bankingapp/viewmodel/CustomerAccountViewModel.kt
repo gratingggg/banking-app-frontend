@@ -1,5 +1,6 @@
 package com.example.bankingapp.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bankingapp.models.transactions.TransactionPagedResultDto
@@ -56,7 +57,7 @@ class CustomerAccountViewModel(
         }
     }
 
-    fun getParticularAccount(accountId: Long) {
+    fun getParticularAccount(accountId: String) {
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
@@ -66,7 +67,7 @@ class CustomerAccountViewModel(
 
             _uiState.update {
                 when (val result =
-                    customerAccountRepository.getParticularAccountByCustomer(accountId)) {
+                    customerAccountRepository.getParticularAccountByCustomer(accountId.toLong())) {
                     is ApiResult.Failure -> {
                         it.copy(
                             errorSelectedAccount = result.error,
@@ -87,7 +88,7 @@ class CustomerAccountViewModel(
     }
 
     fun getAllAccountTransactions(
-        accountId: Long, path: Int? = null, size: Int? = null,
+        accountId: String, path: Int? = null, size: Int? = null,
         transactionStatus: TransactionStatus? = null, transactionType: TransactionType? = null,
         fromDate: LocalDate? = null, toDate: LocalDate? = null
     ) {
@@ -100,7 +101,7 @@ class CustomerAccountViewModel(
 
             _uiState.update {
                 when (val result = customerAccountRepository.getAllAccountTransactionsByCustomer(
-                    accountId = accountId, path = path, size = size,
+                    accountId = accountId.toLong(), path = path, size = size,
                     transactionStatus = transactionStatus, transactionType = transactionType,
                     fromDate = fromDate?.format(formatter), toDate = toDate?.format(formatter)
                 )) {
@@ -151,7 +152,7 @@ class CustomerAccountViewModel(
         }
     }
 
-    fun deleteAccount(accountId: Long) {
+    fun deleteAccount(accountId: String) {
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
@@ -159,7 +160,7 @@ class CustomerAccountViewModel(
                 )
             }
 
-            val result = customerAccountRepository.deleteAccountByCustomer(accountId)
+            val result = customerAccountRepository.deleteAccountByCustomer(accountId.toLong())
 
             _uiState.update {
                 when (result) {
@@ -178,7 +179,7 @@ class CustomerAccountViewModel(
         }
     }
 
-    fun getAccountBalance(accountId: Long) {
+    fun getAccountBalance(accountId: String) {
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
@@ -186,7 +187,7 @@ class CustomerAccountViewModel(
                 )
             }
 
-            val result = customerAccountRepository.getBalanceByCustomer(accountId)
+            val result = customerAccountRepository.getBalanceByCustomer(accountId.toLong())
 
             _uiState.update {
                 when (result) {

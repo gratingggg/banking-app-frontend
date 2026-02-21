@@ -8,6 +8,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -19,16 +20,20 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.bankingapp.R
 import com.example.bankingapp.ui.components.BottomNavItem
 import com.example.bankingapp.ui.components.BottomNavigationBar
+import com.example.bankingapp.ui.containers.CustomerAccountsScreenContainer
 import com.example.bankingapp.ui.containers.CustomerDashboardContainer
 import com.example.bankingapp.ui.containers.LoginScreenContainer
 import com.example.bankingapp.ui.containers.RegisterScreenContainer
+import com.example.bankingapp.ui.containers.TransactionDetailsScreenContainer
 import com.example.bankingapp.ui.screens.CustomerAccountsScreen
 import com.example.bankingapp.ui.screens.CustomerAllNotifications
 import com.example.bankingapp.ui.screens.CustomerCreateAccountScreen
@@ -39,6 +44,7 @@ import com.example.bankingapp.ui.screens.CustomerViewAllLoansScreen
 import com.example.bankingapp.ui.screens.CustomerViewAllTransactionScreen
 import com.example.bankingapp.ui.screens.EmployeeDashboard
 import com.example.bankingapp.ui.screens.SplashScreen
+import com.example.bankingapp.ui.screens.TransactionDetailsScreen
 import com.example.bankingapp.ui.screens.WelcomeScreen
 import com.example.bankingapp.ui.theme.primaryContainerLight
 import com.example.bankingapp.ui.theme.veryLightCoralPink
@@ -75,7 +81,7 @@ fun Navigation() {
 
     Scaffold(
         bottomBar = {
-            if(showBottomBar){
+            if (showBottomBar) {
                 BottomNavigationBar(
                     currentRoute = currentRoute.toString(),
                     navItemsList = navItems
@@ -125,9 +131,9 @@ fun Navigation() {
                 CustomerDashboardContainer(
                     navController = navController,
                     modifier = Modifier
-                    .padding(
-                        bottom = innerPadding.calculateBottomPadding()
-                    )
+                        .padding(
+                            bottom = innerPadding.calculateBottomPadding()
+                        )
                 )
             }
 
@@ -147,11 +153,11 @@ fun Navigation() {
             }
 
             composable(route = AppDestinations.CustomerAccountsScreen.route) {
-                CustomerAccountsScreen(
-                    modifier = Modifier
-                        .padding(
-                            bottom = innerPadding.calculateBottomPadding()
-                        )
+
+                CustomerAccountsScreenContainer(
+                    navController = navController,
+                    entry = it,
+                    modifier = Modifier.fillMaxSize()
                 )
             }
 
@@ -162,7 +168,7 @@ fun Navigation() {
                 )
             }
 
-            composable(route = AppDestinations.CustomerCreateAccountScreen.route){
+            composable(route = AppDestinations.CustomerCreateAccountScreen.route) {
                 CustomerCreateAccountScreen()
             }
 
@@ -184,6 +190,24 @@ fun Navigation() {
 
             composable(route = AppDestinations.CustomerViewAllNotificationsScreen.route) {
                 CustomerAllNotifications()
+            }
+
+            composable(
+                route = AppDestinations.CustomerParticularTransactionScreen.route,
+                arguments = listOf(
+                    navArgument("transactionId") {
+                        type = NavType.StringType
+                        defaultValue = ""
+                        nullable = false
+                    }
+                )
+            ) {
+                val transactionId = it.arguments?.getString("transactionId") ?: ""
+                TransactionDetailsScreenContainer(
+                    navController = navController,
+                    entry = it,
+                    transactionId = transactionId
+                )
             }
         }
     }

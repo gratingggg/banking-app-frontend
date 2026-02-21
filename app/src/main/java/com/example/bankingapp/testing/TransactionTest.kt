@@ -56,7 +56,7 @@ fun TestingTransactionApi(viewModel: TransactionViewModel){
             errorTransaction = state.errorCustomerTransaction,
             transaction = state.customerTransaction
         ) {
-            viewModel.getCustomerTransaction(transactionId)
+            viewModel.getCustomerTransaction(transactionId.toString())
         }
         
         Spacer(modifier = Modifier.height(16.dp))
@@ -68,8 +68,8 @@ fun TestingTransactionApi(viewModel: TransactionViewModel){
         ) {
             viewModel.transferFundByCustomer(
                 amountStr = "1500",
-                fromAccountId = 1,
-                toAccountId = 2,
+                fromAccountId = "1",
+                toAccountId = "2",
                 transactionTypeStr = "TRANSFERRED"
             )
         }
@@ -82,7 +82,7 @@ fun TestingTransactionApi(viewModel: TransactionViewModel){
             errorTransactions = state.errorEmployeeAllTransactions,
             transactions = state.employeeAllTransaction,
             onGetAllTransactions = {
-                viewModel.getEmployeeAllTransaction(customerId)
+                viewModel.getEmployeeAllTransaction(customerId.toString())
             }
         ) {
             transactionId = it
@@ -96,7 +96,7 @@ fun TestingTransactionApi(viewModel: TransactionViewModel){
             errorTransaction = state.errorEmployeeTransaction,
             transaction = state.employeeTransaction
         ) {
-            viewModel.getEmployeeTransaction(transactionId)
+            viewModel.getEmployeeTransaction(transactionId.toString())
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -109,8 +109,8 @@ fun TestingTransactionApi(viewModel: TransactionViewModel){
         ) {
             viewModel.transferFundByEmployee(
                 amountStr = "1000",
-                fromAccountId = 2,
-                toAccountId = 1,
+                fromAccountId = "2",
+                toAccountId = "1",
                 transactionTypeStr = "TRANSFERRED"
             )
         }

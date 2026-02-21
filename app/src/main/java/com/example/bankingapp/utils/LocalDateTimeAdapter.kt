@@ -6,7 +6,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 class LocalDateTimeAdapter {
-    private val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")
+    private val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
     @ToJson
     fun toJson(value: LocalDateTime): String = value.format(formatter)
 

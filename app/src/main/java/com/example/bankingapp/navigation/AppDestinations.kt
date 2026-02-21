@@ -36,4 +36,16 @@ sealed class AppDestinations(val route: String){
     object CustomerAccountsScreen: AppDestinations("customer_view_accounts")
 
     object CustomerProfileScreen: AppDestinations("customer_profile_screen")
+
+    object CustomerParticularAccountScreen: AppDestinations("customer_particular_account_screen/{accountId}")
+
+    object CustomerParticularTransactionScreen: AppDestinations("customer_particular_transaction_screen/{transactionId}")
+
+    object CustomerViewBalanceScreen: AppDestinations("customer_view_balance_screen/{accountId}")
+
+    fun customerParticularAccountRoute(accountId: String) = "customer_particular_account_screen/$accountId"
+
+    fun customerParticularTransactionRoute(transactionId: String) = "customer_particular_transaction_screen/$transactionId"
+
+    fun customerViewBalanceRoute(accountId: String) = "customer_view_balance_screen/$accountId"
 }

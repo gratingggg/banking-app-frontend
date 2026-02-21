@@ -1,5 +1,6 @@
 package com.example.bankingapp.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bankingapp.models.exception.ErrorResponse

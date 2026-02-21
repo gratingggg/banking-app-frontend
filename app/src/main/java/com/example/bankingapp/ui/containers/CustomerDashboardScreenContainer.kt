@@ -1,19 +1,11 @@
 package com.example.bankingapp.ui.containers
 
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import com.example.bankingapp.navigation.AppDestinations
 import com.example.bankingapp.navigation.navigateAndClear
-import com.example.bankingapp.ui.components.BottomNavItem
-import com.example.bankingapp.ui.components.BottomNavigationBar
 import com.example.bankingapp.ui.screens.CustomerDashboardScreen
 
 @Composable

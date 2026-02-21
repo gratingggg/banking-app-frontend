@@ -17,5 +17,9 @@ data class TransactionResponseDto(
     val transactionStatus: TransactionStatus,
     val transactionType: TransactionType,
     val failureReason: String? = null,
-    val handledBy: String? = null
+    val handledBy: String? = null,
+    val isCredit: Boolean = false,
+    val otherCustomer: String? = null,
+    val self: String? = null,
+    val accountId: String? = null
 )

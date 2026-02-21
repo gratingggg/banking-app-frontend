@@ -52,7 +52,7 @@ fun TestingCustomerAccountApi(viewModel: CustomerAccountViewModel) {
             errorSelectedAccount = state.errorSelectedAccount,
             selectedAccount = state.selectedAccount,
         ) {
-            viewModel.getParticularAccount(accountId)
+            viewModel.getParticularAccount(accountId.toString())
         }
 
         TestingGetAllAccountTransactions(
@@ -60,7 +60,7 @@ fun TestingCustomerAccountApi(viewModel: CustomerAccountViewModel) {
             errorGetTransaction = state.errorGetTransaction,
             accountTransactions = state.accountTransactions
         ) {
-            viewModel.getAllAccountTransactions(accountId)
+            viewModel.getAllAccountTransactions(accountId.toString())
         }
 
         TestingCreateAccount(
@@ -81,7 +81,7 @@ fun TestingCustomerAccountApi(viewModel: CustomerAccountViewModel) {
             errorDeletedAccount = state.errorDeletedAccount,
             deletedAccount = state.deletedAccount
         ) {
-            viewModel.deleteAccount(accountId)
+            viewModel.deleteAccount(accountId.toString())
         }
 
         TestingGetAccountBalance(
@@ -89,7 +89,7 @@ fun TestingCustomerAccountApi(viewModel: CustomerAccountViewModel) {
             errorGetBalance = state.errorGetBalance,
             balance = state.balance
         ) {
-            viewModel.getAccountBalance(accountId)
+            viewModel.getAccountBalance(accountId.toString())
         }
         Text(
             text = "CUSTOMER ACCOUNT END",

@@ -16,7 +16,7 @@ object Endpoints {
 
 
 
-    const val CUSTOMER_ACCOUNTS_ALL = "/api/customer/accounts"
+    const val CUSTOMER_ACCOUNTS_ALL = "/api/customer/accounts/all"
     const val CUSTOMER_ACCOUNT_PARTICULAR = "/api/customer/accounts/{accountId}"
     const val CUSTOMER_ACCOUNT_TRANSACTION_ALL = "/api/customer/accounts/{accountId}/transactions"
     const val CUSTOMER_ACCOUNT_CREATE = "/api/customer/accounts"

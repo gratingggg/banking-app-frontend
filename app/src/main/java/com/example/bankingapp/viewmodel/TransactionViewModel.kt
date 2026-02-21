@@ -26,7 +26,7 @@ class TransactionViewModel(
 
     val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
 
-    fun getCustomerTransaction(transactionId: Long){
+    fun getCustomerTransaction(transactionId: String){
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
@@ -35,7 +35,7 @@ class TransactionViewModel(
             }
 
             _uiState.update {
-                when(val result = transactionRepository.getTransactionByCustomer(transactionId)){
+                when(val result = transactionRepository.getTransactionByCustomer(transactionId.toLong())){
                     is ApiResult.Failure -> it.copy(
                         errorCustomerTransaction = result.error,
                         isLoadingCustomerTransaction = false
@@ -51,7 +51,7 @@ class TransactionViewModel(
         }
     }
 
-    fun getEmployeeTransaction(transactionId: Long){
+    fun getEmployeeTransaction(transactionId: String){
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
@@ -60,7 +60,7 @@ class TransactionViewModel(
             }
 
             _uiState.update {
-                when(val result = transactionRepository.getTransactionByEmployee(transactionId)){
+                when(val result = transactionRepository.getTransactionByEmployee(transactionId.toLong())){
                     is ApiResult.Failure -> it.copy(
                         errorEmployeeTransaction = result.error,
                         isLoadingEmployeeTransaction = false
@@ -76,7 +76,7 @@ class TransactionViewModel(
         }
     }
 
-    fun transferFundByCustomer(amountStr: String, fromAccountId: Long, toAccountId: Long? = null, loanId: Long? = null, transactionTypeStr: String){
+    fun transferFundByCustomer(amountStr: String, fromAccountId: String, toAccountId: String? = null, loanId: String? = null, transactionTypeStr: String){
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
@@ -86,9 +86,9 @@ class TransactionViewModel(
 
             val transactionRequestDto = TransactionRequestDto(
                 amount = BigDecimal(amountStr),
-                fromAccountId = fromAccountId,
-                toAccountId = toAccountId,
-                loanId = loanId,
+                fromAccountId = fromAccountId.toLong(),
+                toAccountId = toAccountId?.toLong(),
+                loanId = loanId?.toLong(),
                 transactionType = TransactionType.valueOf(transactionTypeStr.uppercase())
             )
 
@@ -109,7 +109,7 @@ class TransactionViewModel(
         }
     }
 
-    fun transferFundByEmployee(amountStr: String, fromAccountId: Long, toAccountId: Long? = null, loanId: Long? = null, transactionTypeStr: String){
+    fun transferFundByEmployee(amountStr: String, fromAccountId: String, toAccountId: String? = null, loanId: String? = null, transactionTypeStr: String){
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
@@ -119,9 +119,9 @@ class TransactionViewModel(
 
             val transactionRequestDto = TransactionRequestDto(
                 amount = BigDecimal(amountStr),
-                fromAccountId = fromAccountId,
-                toAccountId = toAccountId,
-                loanId = loanId,
+                fromAccountId = fromAccountId.toLong(),
+                toAccountId = toAccountId?.toLong(),
+                loanId = loanId?.toLong(),
                 transactionType = TransactionType.valueOf(transactionTypeStr.uppercase())
             )
 
@@ -176,7 +176,7 @@ class TransactionViewModel(
     }
 
     fun getEmployeeAllTransaction(
-        customerId: Long, page: Int? = null, size: Int? = null,
+        customerId: String, page: Int? = null, size: Int? = null,
         transactionStatus: TransactionStatus? = null, transactionType: TransactionType? = null,
         fromDate: LocalDate? = null, toDate: LocalDate? = null
     ){
@@ -189,7 +189,7 @@ class TransactionViewModel(
 
             _uiState.update {
                 when(val result = transactionRepository.getAllTransactionsByEmployee(
-                    customerId = customerId, page = page, size = size,
+                    customerId = customerId.toLong(), page = page, size = size,
                     transactionStatus = transactionStatus, transactionType = transactionType,
                     fromDate = fromDate?.format(formatter), toDate = toDate?.format(formatter)
                 )){
