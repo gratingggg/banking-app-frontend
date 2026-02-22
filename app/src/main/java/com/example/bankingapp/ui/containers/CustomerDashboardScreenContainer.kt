@@ -38,12 +38,12 @@ fun CustomerDashboardContainer(
         },
         onCustomerAllTransaction = {
             navController.navigateAndClear(
-                route = AppDestinations.CustomerViewAllAccountsAllTransactionsScreen.route
+                route = AppDestinations.CustomerAccountsScreen.route
             )
         },
         onCustomerAllNotification = {
             navController.navigateAndClear(
-                route = AppDestinations.CustomerViewAllNotificationsScreen.route
+                route = AppDestinations.ViewAllNotificationsScreen.route
             )
         },
         onViewBalance = {

@@ -1,5 +1,6 @@
 package com.example.bankingapp.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -38,7 +39,7 @@ fun TransactionDetailsScreen(
     fromAccountId: String? = null
 ){
     LazyColumn(
-        modifier = modifier.padding(top = 24.dp),
+        modifier = modifier.padding(top = 96.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         item {
@@ -46,11 +47,14 @@ fun TransactionDetailsScreen(
         }
 
         item {
+            Log.d("rudraInTransactionDetailsScreen", isCredit.toString())
             Text(
                 text = buildString {
                     append(
+
                         if(isCredit) "From" else "To"
                     )
+                    append(": ")
                     append(customerName)
                 },
                 fontSize = 18.sp,

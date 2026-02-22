@@ -13,10 +13,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
+import com.example.bankingapp.SessionManager
 import com.example.bankingapp.navigation.AppDestinations
 import com.example.bankingapp.navigation.navigateAndClear
 import com.example.bankingapp.network.RetrofitInstance
@@ -48,7 +50,8 @@ fun CustomerAccountsScreenContainer(
         factory = TransactionViewModelFactory(
             TransactionRepositoryImpl(
                 RetrofitInstance.transactionApiService
-            )
+            ),
+            sessionManager = SessionManager.getInstance(LocalContext.current)
         )
     )
 
@@ -78,9 +81,8 @@ fun CustomerAccountsScreenContainer(
             },
             onParticularTransactionClick = {
                 navController.navigateAndClear(
-                    route = AppDestinations.CustomerParticularTransactionScreen.customerParticularTransactionRoute(it.toString())
+                    route = AppDestinations.ParticularTransactionScreen.particularTransactionRoute(it.toString())
                 )
-                Log.d("rudraInsideCustomerAccountScreenContainer", it.toString())
             },
             onViewAllTransactions = {
                 navController.navigateAndClear(

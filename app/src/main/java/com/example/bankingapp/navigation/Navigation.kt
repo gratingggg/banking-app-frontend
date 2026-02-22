@@ -1,24 +1,19 @@
 package com.example.bankingapp.navigation
 
-import android.R.attr.bottom
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ScaffoldDefaults
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -34,17 +29,15 @@ import com.example.bankingapp.ui.containers.CustomerDashboardContainer
 import com.example.bankingapp.ui.containers.LoginScreenContainer
 import com.example.bankingapp.ui.containers.RegisterScreenContainer
 import com.example.bankingapp.ui.containers.TransactionDetailsScreenContainer
-import com.example.bankingapp.ui.screens.CustomerAccountsScreen
+import com.example.bankingapp.ui.containers.ViewAllTransactionScreenContainer
 import com.example.bankingapp.ui.screens.CustomerAllNotifications
 import com.example.bankingapp.ui.screens.CustomerCreateAccountScreen
 import com.example.bankingapp.ui.screens.CustomerCreateLoanScreen
 import com.example.bankingapp.ui.screens.CustomerMoneyTransferScreen
 import com.example.bankingapp.ui.screens.CustomerProfileScreen
 import com.example.bankingapp.ui.screens.CustomerViewAllLoansScreen
-import com.example.bankingapp.ui.screens.CustomerViewAllTransactionScreen
 import com.example.bankingapp.ui.screens.EmployeeDashboard
 import com.example.bankingapp.ui.screens.SplashScreen
-import com.example.bankingapp.ui.screens.TransactionDetailsScreen
 import com.example.bankingapp.ui.screens.WelcomeScreen
 import com.example.bankingapp.ui.theme.primaryContainerLight
 import com.example.bankingapp.ui.theme.veryLightCoralPink
@@ -185,15 +178,18 @@ fun Navigation() {
             }
 
             composable(route = AppDestinations.CustomerViewAllAccountsAllTransactionsScreen.route) {
-                CustomerViewAllTransactionScreen()
+                ViewAllTransactionScreenContainer(
+                    navController = navController,
+                    entry = it
+                )
             }
 
-            composable(route = AppDestinations.CustomerViewAllNotificationsScreen.route) {
+            composable(route = AppDestinations.ViewAllNotificationsScreen.route) {
                 CustomerAllNotifications()
             }
 
             composable(
-                route = AppDestinations.CustomerParticularTransactionScreen.route,
+                route = AppDestinations.ParticularTransactionScreen.route,
                 arguments = listOf(
                     navArgument("transactionId") {
                         type = NavType.StringType
@@ -204,7 +200,6 @@ fun Navigation() {
             ) {
                 val transactionId = it.arguments?.getString("transactionId") ?: ""
                 TransactionDetailsScreenContainer(
-                    navController = navController,
                     entry = it,
                     transactionId = transactionId
                 )

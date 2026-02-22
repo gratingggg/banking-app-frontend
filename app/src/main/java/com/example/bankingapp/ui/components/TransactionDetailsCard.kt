@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -42,7 +43,7 @@ fun TransactionDetailsCard(
             .fillMaxWidth(),
         shape = RoundedCornerShape(8.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF6E6C6C),
+            containerColor = Color(0xFF494848),
             contentColor = Color.White
         )
     ){
@@ -56,23 +57,25 @@ fun TransactionDetailsCard(
                 contentDescription = "logo",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .width(75.dp)
-                    .height(50.dp)
-                    .clip(RoundedCornerShape(12.dp))
+                    .width(60.dp)
+                    .height(40.dp)
+                    .clip(RoundedCornerShape(16.dp))
+                    .padding(end = 12.dp)
             )
 
             Text(
                 text = "Personal Bank of Rudra $accountId",
                 fontSize = 20.sp,
                 overflow = TextOverflow.Clip,
-                maxLines = Int.MAX_VALUE
+                maxLines = Int.MAX_VALUE,
+                textAlign = TextAlign.Center
             )
         }
 
         HorizontalDivider(
             modifier = Modifier.fillMaxWidth(),
             thickness = 1.dp,
-            color = Color(0xFF6E6C6C)
+            color = Color(0xFFDEDCDC)
         )
 
         if(failureReason != null){
@@ -83,56 +86,59 @@ fun TransactionDetailsCard(
                 overflow = TextOverflow.Clip
             )
 
-            Divider(
+            HorizontalDivider(
                 modifier = Modifier.fillMaxWidth(),
                 thickness = 1.dp,
-                color = Color(0xFF6E6C6C)
+                color = Color(0xFFDEDCDC)
             )
         }
 
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(12.dp)
+                .padding(24.dp)
         ) {
             Text(
                 text = "Transaction ID",
-                fontSize = 18.sp
+                fontSize = 20.sp
             )
 
             Text(
                 text = transactionId,
                 fontSize = 18.sp,
-                fontWeight = FontWeight.Light
+                fontWeight = FontWeight.ExtraLight,
+                modifier = Modifier.padding(start = 12.dp)
             )
 
             Spacer(modifier = Modifier.height(12.dp))
 
             Text(
                 text = "To: $receiverName",
-                fontSize = 18.sp
+                fontSize = 20.sp
             )
 
             if(toAccountId != null) {
                 Text(
                     text = toAccountId,
                     fontSize = 18.sp,
-                    fontWeight = FontWeight.Light
+                    fontWeight = FontWeight.ExtraLight,
+                    modifier = Modifier.padding(start = 12.dp)
                 )
             }
 
             Spacer(modifier = Modifier.height(12.dp))
 
             Text(
-                text = "To: $senderName",
-                fontSize = 18.sp
+                text = "From: $senderName",
+                fontSize = 20.sp
             )
 
             if(fromAccountId != null) {
                 Text(
                     text = fromAccountId,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Light
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.ExtraLight,
+                    modifier = Modifier.padding(start = 12.dp)
                 )
             }
         }

@@ -1,17 +1,22 @@
 package com.example.bankingapp.viewmodel
 
+import android.util.Log
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.bankingapp.SessionManager
 import com.example.bankingapp.models.exception.ErrorResponse
 import com.example.bankingapp.models.transactions.TransactionPagedResultDto
 import com.example.bankingapp.models.transactions.TransactionRequestDto
 import com.example.bankingapp.models.transactions.TransactionResponseDto
 import com.example.bankingapp.repository.transaction.TransactionRepository
 import com.example.bankingapp.utils.ApiResult
+import com.example.bankingapp.utils.Role
 import com.example.bankingapp.utils.TransactionStatus
 import com.example.bankingapp.utils.TransactionType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
@@ -19,14 +24,15 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 class TransactionViewModel(
-    private val transactionRepository: TransactionRepository
-): ViewModel(){
+    private val transactionRepository: TransactionRepository,
+    private val sessionManager: SessionManager
+) : ViewModel() {
     private val _uiState = MutableStateFlow(TransactionUiState())
     val uiState: StateFlow<TransactionUiState> = _uiState
 
-    val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
+    val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
 
-    fun getCustomerTransaction(transactionId: String){
+    fun getCustomerTransaction(transactionId: String) {
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
@@ -35,23 +41,26 @@ class TransactionViewModel(
             }
 
             _uiState.update {
-                when(val result = transactionRepository.getTransactionByCustomer(transactionId.toLong())){
+                when (val result =
+                    transactionRepository.getTransactionByCustomer(transactionId.toLong())) {
                     is ApiResult.Failure -> it.copy(
                         errorCustomerTransaction = result.error,
                         isLoadingCustomerTransaction = false
                     )
 
-                    is ApiResult.Success -> it.copy(
-                        customerTransaction = result.data,
-                        isLoadingCustomerTransaction = false,
-                        errorCustomerTransaction = null
-                    )
+                    is ApiResult.Success -> {
+                        it.copy(
+                            customerTransaction = result.data,
+                            isLoadingCustomerTransaction = false,
+                            errorCustomerTransaction = null
+                        )
+                    }
                 }
             }
         }
     }
 
-    fun getEmployeeTransaction(transactionId: String){
+    fun getEmployeeTransaction(transactionId: String) {
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
@@ -60,7 +69,8 @@ class TransactionViewModel(
             }
 
             _uiState.update {
-                when(val result = transactionRepository.getTransactionByEmployee(transactionId.toLong())){
+                when (val result =
+                    transactionRepository.getTransactionByEmployee(transactionId.toLong())) {
                     is ApiResult.Failure -> it.copy(
                         errorEmployeeTransaction = result.error,
                         isLoadingEmployeeTransaction = false
@@ -76,7 +86,13 @@ class TransactionViewModel(
         }
     }
 
-    fun transferFundByCustomer(amountStr: String, fromAccountId: String, toAccountId: String? = null, loanId: String? = null, transactionTypeStr: String){
+    fun transferFundByCustomer(
+        amountStr: String,
+        fromAccountId: String,
+        toAccountId: String? = null,
+        loanId: String? = null,
+        transactionTypeStr: String
+    ) {
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
@@ -93,7 +109,8 @@ class TransactionViewModel(
             )
 
             _uiState.update {
-                when(val result = transactionRepository.transferFundByCustomer(transactionRequestDto)){
+                when (val result =
+                    transactionRepository.transferFundByCustomer(transactionRequestDto)) {
                     is ApiResult.Failure -> it.copy(
                         errorCustomerTransfer = result.error,
                         isTransferringCustomer = false
@@ -109,7 +126,13 @@ class TransactionViewModel(
         }
     }
 
-    fun transferFundByEmployee(amountStr: String, fromAccountId: String, toAccountId: String? = null, loanId: String? = null, transactionTypeStr: String){
+    fun transferFundByEmployee(
+        amountStr: String,
+        fromAccountId: String,
+        toAccountId: String? = null,
+        loanId: String? = null,
+        transactionTypeStr: String
+    ) {
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
@@ -126,7 +149,8 @@ class TransactionViewModel(
             )
 
             _uiState.update {
-                when(val result = transactionRepository.transferFundByEmployee(transactionRequestDto)){
+                when (val result =
+                    transactionRepository.transferFundByEmployee(transactionRequestDto)) {
                     is ApiResult.Failure -> it.copy(
                         errorEmployeeTransfer = result.error,
                         isTransferringEmployee = false
@@ -144,15 +168,18 @@ class TransactionViewModel(
 
     fun getCustomerAllTransactions(
         page: Int? = null, size: Int? = null,
-        transactionStatus: TransactionStatus? = null, transactionType: TransactionType? = null,
+        transactionStatusStr: String? = null, transactionTypeStr: String? = null,
         fromDate: LocalDate? = null, toDate: LocalDate? = null
-    ){
+    ) {
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
                     isLoadingCustomerAllTransactions = true
                 )
             }
+
+            val transactionStatus = if (transactionStatusStr == null) null else TransactionStatus.valueOf(transactionStatusStr)
+            val transactionType = if(transactionTypeStr == null) null else TransactionType.valueOf(transactionTypeStr)
 
             _uiState.update {
                 when (val result = transactionRepository.getAllTransactionsByCustomer(
@@ -177,9 +204,9 @@ class TransactionViewModel(
 
     fun getEmployeeAllTransaction(
         customerId: String, page: Int? = null, size: Int? = null,
-        transactionStatus: TransactionStatus? = null, transactionType: TransactionType? = null,
+        transactionStatusStr: String? = null, transactionTypeStr: String? = null,
         fromDate: LocalDate? = null, toDate: LocalDate? = null
-    ){
+    ) {
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
@@ -187,12 +214,16 @@ class TransactionViewModel(
                 )
             }
 
+            val transactionStatus = if (transactionStatusStr == null) null else TransactionStatus.valueOf(transactionStatusStr)
+            val transactionType = if(transactionTypeStr == null) null else TransactionType.valueOf(transactionTypeStr)
+
+
             _uiState.update {
-                when(val result = transactionRepository.getAllTransactionsByEmployee(
+                when (val result = transactionRepository.getAllTransactionsByEmployee(
                     customerId = customerId.toLong(), page = page, size = size,
                     transactionStatus = transactionStatus, transactionType = transactionType,
                     fromDate = fromDate?.format(formatter), toDate = toDate?.format(formatter)
-                )){
+                )) {
                     is ApiResult.Failure -> it.copy(
                         errorEmployeeAllTransactions = result.error,
                         isLoadingEmployeeAllTransactions = false
