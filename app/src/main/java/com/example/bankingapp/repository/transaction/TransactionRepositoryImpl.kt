@@ -1,15 +1,22 @@
 package com.example.bankingapp.repository.transaction
 
 import android.util.Log
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import com.example.bankingapp.models.exception.ErrorResponse
-import com.example.bankingapp.models.transactions.TransactionPagedResultDto
 import com.example.bankingapp.models.transactions.TransactionRequestDto
 import com.example.bankingapp.models.transactions.TransactionResponseDto
+import com.example.bankingapp.models.transactions.TransactionSummary
 import com.example.bankingapp.network.RetrofitInstance
 import com.example.bankingapp.network.TransactionApiService
+import com.example.bankingapp.paging.MyPagingSource
 import com.example.bankingapp.utils.ApiResult
+import com.example.bankingapp.utils.Constants
 import com.example.bankingapp.utils.TransactionStatus
 import com.example.bankingapp.utils.TransactionType
+import kotlinx.coroutines.flow.Flow
+import retrofit2.HttpException
 import retrofit2.Response
 
 class TransactionRepositoryImpl(
@@ -41,28 +48,39 @@ class TransactionRepositoryImpl(
 
     override suspend fun transferFundByCustomer(transactionRequestDto: TransactionRequestDto): ApiResult<TransactionResponseDto> {
         val result = transactionApiService.transferFundByCustomer(transactionRequestDto)
-        Log.d("rudra", result.toString())
         return helper(result)
     }
 
-    override suspend fun getAllTransactionsByCustomer(
-        page: Int?,
-        size: Int?,
+    override fun getAllTransactionsByCustomer(
         transactionStatus: TransactionStatus?,
         transactionType: TransactionType?,
         fromDate: String?,
         toDate: String?
-    ): ApiResult<TransactionPagedResultDto> {
-        val result = transactionApiService.getAllTransactionsByCustomer(
-            page = page,
-            size = size,
-            transactionStatus = transactionStatus,
-            transactionType = transactionType,
-            fromDate = fromDate,
-            toDate = toDate
-        )
+    ): Flow<PagingData<TransactionSummary>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = Constants.PAGE_SIZE
+            ),
+            pagingSourceFactory = {
+                MyPagingSource(
+                    fetchData = { page ->
+                        val response = transactionApiService.getAllTransactionsByCustomer(
+                            page = page,
+                            transactionStatus = transactionStatus,
+                            transactionType = transactionType,
+                            fromDate = fromDate,
+                            toDate = toDate
+                        )
 
-        return helper(result)
+                        if(response.isSuccessful){
+                            response.body() ?: throw Exception("Response body is null")
+                        } else {
+                            throw HttpException(response)
+                        }
+                    }
+                )
+            }
+        ).flow
     }
 
     override suspend fun getTransactionByEmployee(transactionId: Long): ApiResult<TransactionResponseDto> {
@@ -75,24 +93,38 @@ class TransactionRepositoryImpl(
         return helper(result)
     }
 
-    override suspend fun getAllTransactionsByEmployee(
+    override fun getAllTransactionsByEmployee(
         customerId: Long,
-        page: Int?,
-        size: Int?,
         transactionStatus: TransactionStatus?,
         transactionType: TransactionType?,
         fromDate: String?,
         toDate: String?
-    ): ApiResult<TransactionPagedResultDto> {
-        val result = transactionApiService.getAllTransactionsByEmployee(
-            customerId = customerId,
-            page = page,
-            size = size,
-            transactionStatus = transactionStatus,
-            transactionType = transactionType,
-            fromDate = fromDate,
-            toDate = toDate
-        )
-        return helper(result)
+    ): Flow<PagingData<TransactionSummary>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = Constants.PAGE_SIZE
+            ),
+            pagingSourceFactory = {
+                MyPagingSource(
+                    fetchData = { page ->
+                        val result = transactionApiService.getAllTransactionsByEmployee(
+                            page = page,
+                            customerId = customerId,
+                            transactionType = transactionType,
+                            transactionStatus = transactionStatus,
+                            fromDate = fromDate,
+                            toDate = toDate
+                        )
+
+                        if(result.isSuccessful){
+                            result.body() ?: throw Exception("Response body is null")
+                        } else {
+                            throw HttpException(result)
+                        }
+                    }
+                )
+            }
+        ).flow
     }
+
 }

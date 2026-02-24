@@ -1,5 +1,6 @@
 package com.example.bankingapp.ui.components
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -81,7 +82,9 @@ fun TransactionRowTextField(
                 },
                 style = TextStyle(
                     fontSize = 18.sp,
-                    color = if (transaction.credit) Color.Green else Color.White
+                    color =
+                        if(!transaction.success) Color.Red else
+                        if (transaction.credit) Color.Green else Color.White
                 )
             )
         }

@@ -2,8 +2,8 @@ package com.example.bankingapp.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.bankingapp.models.PagedResponse
 import com.example.bankingapp.models.exception.ErrorResponse
-import com.example.bankingapp.models.notifications.NotificationPagedResultDto
 import com.example.bankingapp.models.notifications.NotificationResponseDto
 import com.example.bankingapp.repository.notifications.NotificationRepository
 import com.example.bankingapp.utils.ApiResult
@@ -111,7 +111,7 @@ data class NotificationUiState(
     val isLoadingNotification: Boolean = false,
     val isReadingNotifications: Boolean = false,
 
-    val allNotifications: NotificationPagedResultDto? = null,
+    val allNotifications: PagedResponse<NotificationResponseDto>? = null,
     val notification: NotificationResponseDto? = null,
 
     val errorAllNotifications: ErrorResponse? = null,

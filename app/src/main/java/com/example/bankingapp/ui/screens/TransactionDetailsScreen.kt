@@ -37,7 +37,7 @@ fun TransactionDetailsScreen(
     toAccountId: String? = null,
     failureReason: String? = null,
     fromAccountId: String? = null
-){
+) {
     LazyColumn(
         modifier = modifier.padding(top = 96.dp),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -47,15 +47,14 @@ fun TransactionDetailsScreen(
         }
 
         item {
-            Log.d("rudraInTransactionDetailsScreen", isCredit.toString())
             Text(
                 text = buildString {
                     append(
 
-                        if(isCredit) "From" else "To"
+                        if (isCredit) "From" else "To"
                     )
                     append(": ")
-                    append(customerName)
+                    append(if (customerName != "null") customerName else "")
                 },
                 fontSize = 18.sp,
                 modifier = Modifier.padding(8.dp)
@@ -77,7 +76,7 @@ fun TransactionDetailsScreen(
             Row(
                 modifier = Modifier.padding(16.dp)
             ) {
-                if(status == TransactionStatus.SUCCESS){
+                if (status == TransactionStatus.SUCCESS) {
                     Icon(
                         imageVector = Icons.Default.CheckCircle,
                         contentDescription = "success",
@@ -117,8 +116,8 @@ fun TransactionDetailsScreen(
             TransactionDetailsCard(
                 accountId = accountId,
                 transactionId = transactionId,
-                senderName = if(isCredit) customerName else selfName,
-                receiverName = if(isCredit) selfName else customerName,
+                senderName = if (isCredit) customerName else selfName,
+                receiverName = if (isCredit) selfName else customerName,
                 modifier = Modifier.padding(24.dp),
                 toAccountId = toAccountId,
                 fromAccountId = fromAccountId,

@@ -30,7 +30,6 @@ import com.example.bankingapp.R
 import com.example.bankingapp.SessionManager
 import com.example.bankingapp.navigation.AppDestinations
 import com.example.bankingapp.navigation.navigateAndClear
-import com.example.bankingapp.network.RetrofitInstance.sessionManager
 import com.example.bankingapp.utils.Role
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.firstOrNull
@@ -52,7 +51,6 @@ fun SplashScreen(
         LaunchedEffect(true) {
             delay(3000)
             val isLoggedIn = sessionManager.isLoggedIn()
-
             if(isLoggedIn){
                 val role = sessionManager.role.firstOrNull()
                 val destination = if(role == Role.EMPLOYEE) AppDestinations.EmployeeDashboard.route else AppDestinations.CustomerDashboard.route

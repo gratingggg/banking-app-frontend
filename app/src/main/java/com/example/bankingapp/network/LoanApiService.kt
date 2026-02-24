@@ -1,11 +1,11 @@
 package com.example.bankingapp.network
 
-import com.example.bankingapp.models.loan.LoanPagedResultDto
+import com.example.bankingapp.models.PagedResponse
 import com.example.bankingapp.models.loan.LoanRepaymentDto
 import com.example.bankingapp.models.loan.LoanRequestDto
 import com.example.bankingapp.models.loan.LoanResponseDto
-import com.example.bankingapp.models.transactions.TransactionPagedResultDto
 import com.example.bankingapp.models.transactions.TransactionResponseDto
+import com.example.bankingapp.models.transactions.TransactionSummary
 import com.example.bankingapp.utils.Endpoints
 import com.example.bankingapp.utils.LoanStatus
 import com.example.bankingapp.utils.LoanType
@@ -29,7 +29,7 @@ interface LoanApiService {
         @Query("type") loanType: LoanType? = null,
         @Query("fromDate") fromDate: LocalDate? = null,
         @Query("toDate") toDate: LocalDate? = null
-    ): Response<LoanPagedResultDto>
+    ): Response<PagedResponse<LoanResponseDto>>
 
     @POST(Endpoints.CUSTOMER_LOAN_REPAY)
     suspend fun repayLoanByCustomer(@Body loanRepaymentDto: LoanRepaymentDto): Response<TransactionResponseDto>
@@ -46,7 +46,7 @@ interface LoanApiService {
         @Query("type") loanType: LoanType? = null,
         @Query("fromDate") fromDate: LocalDate? = null,
         @Query("toDate") toDate: LocalDate? = null
-    ): Response<TransactionPagedResultDto>
+    ): Response<PagedResponse<TransactionSummary>>
 
     @POST(Endpoints.EMPLOYEE_LOAN_APPLY)
     suspend fun createLoanByEmployee(
@@ -63,7 +63,7 @@ interface LoanApiService {
         @Query("type") loanType: LoanType? = null,
         @Query("fromDate") fromDate: LocalDate? = null,
         @Query("toDate") toDate: LocalDate? = null
-    ): Response<LoanPagedResultDto>
+    ): Response<PagedResponse<LoanResponseDto>>
 
     @GET(Endpoints.EMPLOYEE_LOAN_PARTICULAR)
     suspend fun getParticularLoanBYEmployee(@Path("loanId") loanId: Long): Response<LoanResponseDto>
@@ -77,7 +77,7 @@ interface LoanApiService {
         @Query("type") loanType: LoanType? = null,
         @Query("fromDate") fromDate: LocalDate? = null,
         @Query("toDate") toDate: LocalDate? = null
-    ): Response<TransactionPagedResultDto>
+    ): Response<PagedResponse<TransactionSummary>>
 
     @GET(Endpoints.EMPLOYEE_LOAN_ALL)
     suspend fun getAllLoans(
@@ -87,5 +87,5 @@ interface LoanApiService {
         @Query("type") loanType: LoanType? = null,
         @Query("fromDate") fromDate: LocalDate? = null,
         @Query("toDate") toDate: LocalDate? = null
-    ): Response<LoanPagedResultDto>
+    ): Response<PagedResponse<LoanResponseDto>>
 }

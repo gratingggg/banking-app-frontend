@@ -1,7 +1,7 @@
 package com.example.bankingapp.repository.notifications
 
+import com.example.bankingapp.models.PagedResponse
 import com.example.bankingapp.models.exception.ErrorResponse
-import com.example.bankingapp.models.notifications.NotificationPagedResultDto
 import com.example.bankingapp.models.notifications.NotificationResponseDto
 import com.example.bankingapp.network.NotificationApiService
 import com.example.bankingapp.network.RetrofitInstance
@@ -40,7 +40,7 @@ class NotificationRepositoryImpl(
         notificationType: NotificationType?,
         fromDate: LocalDate?,
         toDate: LocalDate?
-    ): ApiResult<NotificationPagedResultDto> {
+    ): ApiResult<PagedResponse<NotificationResponseDto>> {
         val result = notificationApiService.getAllNotifications(
             page = page,
             size = size,

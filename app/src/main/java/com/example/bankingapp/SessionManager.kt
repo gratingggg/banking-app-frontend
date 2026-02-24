@@ -1,6 +1,7 @@
 package com.example.bankingapp
 
 import android.content.Context
+import android.util.Log
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
@@ -8,6 +9,8 @@ import com.example.bankingapp.utils.Role
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
+
+private val Context.dataStore by preferencesDataStore("user_prefs")
 
 class SessionManager private constructor(context: Context){
 
@@ -25,9 +28,6 @@ class SessionManager private constructor(context: Context){
     }
 
     private val appContext = context.applicationContext
-
-    private val Context.dataStore by preferencesDataStore("user_prefs")
-
     private val TOKEN_KEY = stringPreferencesKey("user_token")
     private val USERNAME_KEY = stringPreferencesKey("user_username")
     private val ROLE_KEY = stringPreferencesKey("user_role")

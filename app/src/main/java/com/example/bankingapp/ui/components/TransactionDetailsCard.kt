@@ -15,6 +15,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -83,7 +84,9 @@ fun TransactionDetailsCard(
                 text = failureReason,
                 fontSize = 18.sp,
                 maxLines = Int.MAX_VALUE,
-                overflow = TextOverflow.Clip
+                overflow = TextOverflow.Clip,
+                modifier = Modifier.padding(vertical = 24.dp)
+                    .align(Alignment.CenterHorizontally)
             )
 
             HorizontalDivider(
@@ -136,7 +139,7 @@ fun TransactionDetailsCard(
             if(fromAccountId != null) {
                 Text(
                     text = fromAccountId,
-                    fontSize = 16.sp,
+                    fontSize = 18.sp,
                     fontWeight = FontWeight.ExtraLight,
                     modifier = Modifier.padding(start = 12.dp)
                 )

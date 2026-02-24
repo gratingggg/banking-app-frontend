@@ -1,4 +1,4 @@
-package com.example.bankingapp.ui.containers
+package com.example.bankingapp.ui.containers.customer
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable

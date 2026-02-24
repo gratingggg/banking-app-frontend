@@ -34,15 +34,15 @@ class RegisterViewModel(
 
             val result = registerRepository.register(
                 CustomerRequestDto(
-                    name = name,
-                    email = email,
-                    phoneNumber = phoneNumber,
+                    name = name.trim(),
+                    email = email.trim(),
+                    phoneNumber = phoneNumber.trim(),
                     dateOfBirth = dateOfBirth,
-                    address = address,
+                    address = address.trim(),
                     gender = gender,
-                    username = username,
-                    password = password,
-                    aadharNo = aadharNo
+                    username = username.trim(),
+                    password = password.trim(),
+                    aadharNo = aadharNo.trim()
                 )
             )
 

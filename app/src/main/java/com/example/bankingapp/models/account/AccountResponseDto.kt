@@ -11,7 +11,6 @@ data class AccountResponseDto(
     val accountId: Long,
     val accountType: AccountType,
     val accountStatus: AccountStatus,
-    val balance: BigDecimal,
     val dateOfIssuance: LocalDate,
     val customerName: String
 )

@@ -1,9 +1,9 @@
 package com.example.bankingapp.repository.loan
 
-import com.example.bankingapp.models.loan.LoanPagedResultDto
+import com.example.bankingapp.models.PagedResponse
 import com.example.bankingapp.models.loan.LoanRequestDto
 import com.example.bankingapp.models.loan.LoanResponseDto
-import com.example.bankingapp.models.transactions.TransactionPagedResultDto
+import com.example.bankingapp.models.transactions.TransactionSummary
 import com.example.bankingapp.utils.ApiResult
 import com.example.bankingapp.utils.LoanStatus
 import com.example.bankingapp.utils.LoanType
@@ -22,7 +22,7 @@ interface EmployeeLoanRepository {
         loanType: LoanType? = null,
         fromDate: LocalDate? = null,
         toDate: LocalDate? = null
-    ): ApiResult<LoanPagedResultDto>
+    ): ApiResult<PagedResponse<LoanResponseDto>>
 
     suspend fun getParticularLoanByEmployee(loanId: Long): ApiResult<LoanResponseDto>
 
@@ -34,7 +34,7 @@ interface EmployeeLoanRepository {
         loanType: LoanType? = null,
         fromDate: LocalDate? = null,
         toDate: LocalDate? = null
-    ): ApiResult<TransactionPagedResultDto>
+    ): ApiResult<PagedResponse<TransactionSummary>>
 
     suspend fun getAllLoansByEmployee(
         page: Int? = null,
@@ -43,5 +43,5 @@ interface EmployeeLoanRepository {
         loanType: LoanType? = null,
         fromDate: LocalDate? = null,
         toDate: LocalDate? = null
-    ): ApiResult<LoanPagedResultDto>
+    ): ApiResult<PagedResponse<LoanResponseDto>>
 }

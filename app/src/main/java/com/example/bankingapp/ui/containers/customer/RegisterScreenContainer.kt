@@ -1,4 +1,4 @@
-package com.example.bankingapp.ui.containers
+package com.example.bankingapp.ui.containers.customer
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding

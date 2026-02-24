@@ -1,11 +1,12 @@
 package com.example.bankingapp.network
 
-import com.example.bankingapp.models.transactions.TransactionPagedResultDto
+import com.example.bankingapp.models.PagedResponse
 import com.example.bankingapp.models.account.AccountBalanceResponseDto
 import com.example.bankingapp.models.account.AccountRequestDto
 import com.example.bankingapp.models.account.AccountResponseDto
 import com.example.bankingapp.models.account.AccountSummaryDto
 import com.example.bankingapp.models.transactions.TransactionResponseDto
+import com.example.bankingapp.models.transactions.TransactionSummary
 import com.example.bankingapp.utils.Endpoints
 import com.example.bankingapp.utils.TransactionStatus
 import com.example.bankingapp.utils.TransactionType
@@ -35,7 +36,7 @@ interface AccountApiService {
         @Query("transactionType") transactionType: TransactionType? = null,
         @Query("fromDate") fromDate: String? = null,
         @Query("toDate") toDate: String? = null
-    ): Response<TransactionPagedResultDto>
+    ): Response<PagedResponse<TransactionSummary>>
 
     @POST(Endpoints.CUSTOMER_ACCOUNT_CREATE)
     suspend fun createAccountByCustomer(
@@ -82,7 +83,7 @@ interface AccountApiService {
         @Query("transactionType") transactionType: TransactionType? = null,
         @Query("fromDate") fromDate: String? = null,
         @Query("toDate") toDate: String? = null
-    ): Response<TransactionPagedResultDto>
+    ): Response<PagedResponse<TransactionSummary>>
 
     @GET(Endpoints.EMPLOYEE_ACCOUNT_BALANCE)
     suspend fun getAccountBalanceByEmployee(

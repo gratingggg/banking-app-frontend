@@ -1,6 +1,6 @@
 package com.example.bankingapp.network
 
-import com.example.bankingapp.models.notifications.NotificationPagedResultDto
+import com.example.bankingapp.models.PagedResponse
 import com.example.bankingapp.models.notifications.NotificationResponseDto
 import com.example.bankingapp.utils.Endpoints
 import com.example.bankingapp.utils.NotificationStatus
@@ -21,7 +21,7 @@ interface NotificationApiService {
         @Query("status") notificationStatus: NotificationStatus? = null,
         @Query("fromDate") fromDate: LocalDate? = null,
         @Query("toDate") toDate: LocalDate? = null
-    ): Response<NotificationPagedResultDto>
+    ): Response<PagedResponse<NotificationResponseDto>>
 
     @GET(Endpoints.NOTIFICATION_PARTICULAR)
     suspend fun getANotification(@Path("notificationId") notificationId: Long)

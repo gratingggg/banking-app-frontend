@@ -1,16 +1,12 @@
 package com.example.bankingapp.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.bankingapp.models.PagedResponse
 import com.example.bankingapp.models.exception.ErrorResponse
-import com.example.bankingapp.models.loan.LoanPagedResultDto
-import com.example.bankingapp.models.loan.LoanRepaymentDto
 import com.example.bankingapp.models.loan.LoanRequestDto
 import com.example.bankingapp.models.loan.LoanResponseDto
-import com.example.bankingapp.models.transactions.TransactionPagedResultDto
-import com.example.bankingapp.models.transactions.TransactionResponseDto
-import com.example.bankingapp.repository.loan.CustomerLoanRepository
+import com.example.bankingapp.models.transactions.TransactionSummary
 import com.example.bankingapp.repository.loan.EmployeeLoanRepository
 import com.example.bankingapp.utils.ApiResult
 import com.example.bankingapp.utils.LoanStatus
@@ -18,7 +14,6 @@ import com.example.bankingapp.utils.LoanType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -183,10 +178,10 @@ class EmployeeLoanViewModel(
 
 data class EmployeeLoanUiState(
     val createdLoan: LoanResponseDto? = null,
-    val allCustomerLoans: LoanPagedResultDto? = null,
-    val loanTransactions: TransactionPagedResultDto? = null,
+    val allCustomerLoans: PagedResponse<LoanResponseDto>? = null,
+    val loanTransactions: PagedResponse<TransactionSummary>? = null,
     val selectedLoan: LoanResponseDto? = null,
-    val allLoans: LoanPagedResultDto? = null,
+    val allLoans: PagedResponse<LoanResponseDto>? = null,
 
 
     val isCreatingLoan: Boolean = false,

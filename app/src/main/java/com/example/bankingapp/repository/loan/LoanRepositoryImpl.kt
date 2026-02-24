@@ -1,13 +1,12 @@
 package com.example.bankingapp.repository.loan
 
-import android.util.Log
+import com.example.bankingapp.models.PagedResponse
 import com.example.bankingapp.models.exception.ErrorResponse
-import com.example.bankingapp.models.loan.LoanPagedResultDto
 import com.example.bankingapp.models.loan.LoanRepaymentDto
 import com.example.bankingapp.models.loan.LoanRequestDto
 import com.example.bankingapp.models.loan.LoanResponseDto
-import com.example.bankingapp.models.transactions.TransactionPagedResultDto
 import com.example.bankingapp.models.transactions.TransactionResponseDto
+import com.example.bankingapp.models.transactions.TransactionSummary
 import com.example.bankingapp.network.LoanApiService
 import com.example.bankingapp.network.RetrofitInstance
 import com.example.bankingapp.utils.ApiResult
@@ -55,7 +54,7 @@ class LoanRepositoryImpl (
         loanType: LoanType?,
         fromDate: LocalDate?,
         toDate: LocalDate?
-    ): ApiResult<LoanPagedResultDto> {
+    ): ApiResult<PagedResponse<LoanResponseDto>> {
         val result = loanApiService.getAllLoansByCustomer(
             page = page,
             size = size,
@@ -80,7 +79,7 @@ class LoanRepositoryImpl (
         loanType: LoanType?,
         fromDate: LocalDate?,
         toDate: LocalDate?
-    ): ApiResult<TransactionPagedResultDto> {
+    ): ApiResult<PagedResponse<TransactionSummary>> {
         val result = loanApiService.getLoanTransactionsByCustomer(
             loanId = loanId,
             page = page,
@@ -109,7 +108,7 @@ class LoanRepositoryImpl (
         loanType: LoanType?,
         fromDate: LocalDate?,
         toDate: LocalDate?
-    ): ApiResult<LoanPagedResultDto> {
+    ): ApiResult<PagedResponse<LoanResponseDto>> {
         val result = loanApiService.getAllLoansByEmployee(
             customerId = customerId,
             page = page,
@@ -135,7 +134,7 @@ class LoanRepositoryImpl (
         loanType: LoanType?,
         fromDate: LocalDate?,
         toDate: LocalDate?
-    ): ApiResult<TransactionPagedResultDto> {
+    ): ApiResult<PagedResponse<TransactionSummary>> {
         val result = loanApiService.getLoanTransactionsByEmployee(
             loanId = loanId,
             page = page,
@@ -155,7 +154,7 @@ class LoanRepositoryImpl (
         loanType: LoanType?,
         fromDate: LocalDate?,
         toDate: LocalDate?
-    ): ApiResult<LoanPagedResultDto> {
+    ): ApiResult<PagedResponse<LoanResponseDto>> {
         val result = loanApiService.getAllLoans(
             page = page,
             size = size,

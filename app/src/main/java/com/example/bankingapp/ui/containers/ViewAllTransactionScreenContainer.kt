@@ -17,6 +17,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
+import androidx.paging.LoadState
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.bankingapp.SessionManager
 import com.example.bankingapp.navigation.AppDestinations
 import com.example.bankingapp.navigation.navigateAndClear
@@ -28,7 +30,6 @@ import com.example.bankingapp.utils.TransactionStatus
 import com.example.bankingapp.utils.TransactionType
 import com.example.bankingapp.viewmodel.TransactionViewModel
 import com.example.bankingapp.viewmodel.factory.TransactionViewModelFactory
-import java.time.LocalDate
 
 @Composable
 fun ViewAllTransactionScreenContainer(
@@ -36,7 +37,7 @@ fun ViewAllTransactionScreenContainer(
     entry: NavBackStackEntry,
     modifier: Modifier = Modifier,
     customerId: String? = null
-){
+) {
     val context = LocalContext.current
     val sessionManager = SessionManager.getInstance(context)
     val role by sessionManager.role.collectAsState(initial = null)
@@ -44,12 +45,11 @@ fun ViewAllTransactionScreenContainer(
     val viewModel: TransactionViewModel = viewModel(
         viewModelStoreOwner = entry,
         factory = TransactionViewModelFactory(
-            transactionRepository = TransactionRepositoryImpl(RetrofitInstance.transactionApiService),
-            sessionManager = sessionManager
+            transactionRepository = TransactionRepositoryImpl(RetrofitInstance.transactionApiService)
         )
     )
 
-    val state by viewModel.uiState.collectAsState()
+    val transactions = viewModel.transactions.collectAsLazyPagingItems()
 
     val snackbar = remember {
         SnackbarHostState()
@@ -57,85 +57,73 @@ fun ViewAllTransactionScreenContainer(
 
     Box(
         modifier = modifier
-    ){
-        val transactions = when(role){
-            Role.CUSTOMER -> state.customerAllTransaction
-            Role.EMPLOYEE -> state.employeeAllTransaction
-            null -> null
-        }
-        if(transactions != null){
-            ViewAllTransactionScreen(
-                status = TransactionStatus.entries.map {
-                    it.name.lowercase().replaceFirstChar { it.uppercase() }
-                },
-                type = TransactionType.entries.map {
-                    it.name.lowercase().replaceFirstChar { it.uppercase() }
-                },
-                transactions = transactions.content,
-                onTransactionClick = {
-                    navController.navigateAndClear(
-                        route = AppDestinations.ParticularTransactionScreen.particularTransactionRoute(it.toString())
+    ) {
+        ViewAllTransactionScreen(
+            status = TransactionStatus.entries.map {
+                it.name.lowercase().replaceFirstChar { it.uppercase() }
+            },
+            type = TransactionType.entries.map {
+                it.name.lowercase().replaceFirstChar { it.uppercase() }
+            },
+            transactions = transactions,
+            onTransactionClick = {
+                navController.navigateAndClear(
+                    route = AppDestinations.ParticularTransactionScreen.particularTransactionRoute(
+                        it.toString()
+                    )
+                )
+            }
+        ) {
+            when (role) {
+                Role.CUSTOMER -> {
+                    viewModel.getCustomerAllTransactions(
+                        transactionStatusStr = it["Status"],
+                        transactionTypeStr = it["Type"],
+                        fromDateStr = it["Date"]
                     )
                 }
-            ) {
-                val monthsToMinus: Long = when(it["Date"]){
-                    "This month" -> 1
-                    "Last 90 days" -> 3
-                    "Last 180 days" -> 6
-                    else -> 0
-                }
-                when(role){
-                    Role.CUSTOMER -> {
-                        viewModel.getCustomerAllTransactions(
-                            transactionStatusStr = it["Status"],
-                            transactionTypeStr = it["Type"],
-                            fromDate = LocalDate.now().minusMonths(monthsToMinus)
-                        )
-                    }
 
-                    Role.EMPLOYEE -> {
-                        viewModel.getEmployeeAllTransaction(
-                            customerId = customerId ?: Long.MAX_VALUE.toString(),
-                            transactionStatusStr = it["Status"],
-                            transactionTypeStr = it["Type"],
-                            fromDate = LocalDate.now().minusMonths(monthsToMinus)
-                        )
-                    }
-
-                    else -> {}
+                Role.EMPLOYEE -> {
+                    viewModel.getEmployeeAllTransaction(
+                        customerId = customerId ?: Long.MAX_VALUE.toString(),
+                        transactionStatusStr = it["Status"],
+                        transactionTypeStr = it["Type"],
+                        fromDateStr = it["Date"]
+                    )
                 }
+
+                else -> {}
             }
-
-
-            SnackbarHost(
-                hostState = snackbar,
-                modifier = Modifier
-                    .padding(16.dp)
-                    .align(Alignment.BottomCenter)
-            )
         }
+
+        SnackbarHost(
+            hostState = snackbar,
+            modifier = Modifier
+                .padding(16.dp)
+                .align(Alignment.BottomCenter)
+        )
     }
 
-    LaunchedEffect(state, role) {
-        val error = when(role){
-            Role.CUSTOMER -> state.errorCustomerAllTransactions
-            Role.EMPLOYEE -> state.errorEmployeeAllTransactions
-            null -> null
-        }
-        error?.let {
-            snackbar.showSnackbar(
-                message = error.message,
-                duration = SnackbarDuration.Short,
-                withDismissAction = true
-            )
+
+    LaunchedEffect(transactions.loadState) {
+        val error = transactions.loadState.refresh as? LoadState.Error
+            ?: transactions.loadState.append as? LoadState.Error
+        if(error != null){
+            error.error.message?.let {
+                snackbar.showSnackbar(
+                    message = it,
+                    withDismissAction = true,
+                    duration = SnackbarDuration.Short
+                )
+            }
         }
     }
 
     LaunchedEffect(role) {
-        when(role){
+        when (role) {
             Role.CUSTOMER -> viewModel.getCustomerAllTransactions()
-            Role.EMPLOYEE -> viewModel.getEmployeeAllTransaction(customerId = customerId ?: Long.MAX_VALUE.toString())
-            null -> null
+            Role.EMPLOYEE -> if(!customerId.isNullOrBlank() && customerId != "null") viewModel.getEmployeeAllTransaction(customerId)
+            null -> Unit
         }
     }
 }

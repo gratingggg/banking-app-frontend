@@ -8,10 +8,13 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.navigation.NavHostController
@@ -22,29 +25,31 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.bankingapp.R
+import com.example.bankingapp.SessionManager
 import com.example.bankingapp.ui.components.BottomNavItem
 import com.example.bankingapp.ui.components.BottomNavigationBar
-import com.example.bankingapp.ui.containers.CustomerAccountsScreenContainer
-import com.example.bankingapp.ui.containers.CustomerDashboardContainer
 import com.example.bankingapp.ui.containers.LoginScreenContainer
-import com.example.bankingapp.ui.containers.RegisterScreenContainer
 import com.example.bankingapp.ui.containers.TransactionDetailsScreenContainer
 import com.example.bankingapp.ui.containers.ViewAllTransactionScreenContainer
-import com.example.bankingapp.ui.screens.CustomerAllNotifications
-import com.example.bankingapp.ui.screens.CustomerCreateAccountScreen
-import com.example.bankingapp.ui.screens.CustomerCreateLoanScreen
-import com.example.bankingapp.ui.screens.CustomerMoneyTransferScreen
-import com.example.bankingapp.ui.screens.CustomerProfileScreen
-import com.example.bankingapp.ui.screens.CustomerViewAllLoansScreen
+import com.example.bankingapp.ui.containers.customer.CustomerAccountDetailScreenContainer
+import com.example.bankingapp.ui.containers.customer.CustomerAccountTransactionsScreenContainer
+import com.example.bankingapp.ui.containers.customer.CustomerAccountsScreenContainer
+import com.example.bankingapp.ui.containers.customer.CustomerBalanceScreenContainer
+import com.example.bankingapp.ui.containers.customer.CustomerDashboardContainer
+import com.example.bankingapp.ui.containers.customer.RegisterScreenContainer
+import com.example.bankingapp.ui.containers.employee.EmployeeAccountDetailScreenContainer
+import com.example.bankingapp.ui.containers.employee.EmployeeAccountTransactionsScreenContainer
+import com.example.bankingapp.ui.containers.employee.EmployeeBalanceScreenContainer
 import com.example.bankingapp.ui.screens.EmployeeDashboard
 import com.example.bankingapp.ui.screens.SplashScreen
 import com.example.bankingapp.ui.screens.WelcomeScreen
 import com.example.bankingapp.ui.theme.primaryContainerLight
 import com.example.bankingapp.ui.theme.veryLightCoralPink
+import com.example.bankingapp.utils.Role
 
 @Composable
 fun Navigation() {
-    var navController = rememberNavController()
+    val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     var currentRoute = navBackStackEntry?.destination?.route
 
@@ -71,6 +76,20 @@ fun Navigation() {
     val destinations = navItems.map { it.route }
 
     val showBottomBar = currentRoute != null && currentRoute in destinations
+
+    val context = LocalContext.current
+    val sessionManager = SessionManager.getInstance(context)
+    val token by sessionManager.token.collectAsState(initial = "loading")
+    val role by sessionManager.role.collectAsState(initial = null)
+
+    LaunchedEffect(token) {
+        if(token == null){
+            navController.navigateAndClear(
+                route = AppDestinations.Welcome.route,
+                popUpToRoute = navController.graph.startDestinationRoute
+            )
+        }
+    }
 
     Scaffold(
         bottomBar = {
@@ -130,6 +149,12 @@ fun Navigation() {
                 )
             }
 
+            composable(route = AppDestinations.EmployeeDashboard.route){
+                EmployeeDashboard(
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+
             composable(route = AppDestinations.Register.route) {
                 Surface(
                     color = veryLightCoralPink
@@ -141,51 +166,48 @@ fun Navigation() {
                 }
             }
 
-            composable(route = AppDestinations.EmployeeDashboard.route) {
-                EmployeeDashboard()
-            }
-
             composable(route = AppDestinations.CustomerAccountsScreen.route) {
-
                 CustomerAccountsScreenContainer(
                     navController = navController,
                     entry = it,
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
-
-            composable(route = AppDestinations.CustomerProfileScreen.route) {
-                CustomerProfileScreen(
                     modifier = Modifier
-                        .padding(innerPadding)
+                        .fillMaxSize()
+                        .padding(bottom = innerPadding.calculateBottomPadding())
                 )
             }
 
-            composable(route = AppDestinations.CustomerCreateAccountScreen.route) {
-                CustomerCreateAccountScreen()
+            composable(
+                route = AppDestinations.CustomerAllTransactionScreen.route
+            ) {
+                Surface(
+                    color = veryLightCoralPink
+                ) {
+                    ViewAllTransactionScreenContainer(
+                        navController = navController,
+                        entry = it
+                    )
+                }
             }
 
-            composable(route = AppDestinations.CustomerMoneyTransferScreen.route) {
-                CustomerMoneyTransferScreen()
-            }
-
-            composable(route = AppDestinations.CustomerViewAllLoansScreen.route) {
-                CustomerViewAllLoansScreen()
-            }
-
-            composable(route = AppDestinations.CustomerCreateLoanScreen.route) {
-                CustomerCreateLoanScreen()
-            }
-
-            composable(route = AppDestinations.CustomerViewAllAccountsAllTransactionsScreen.route) {
-                ViewAllTransactionScreenContainer(
-                    navController = navController,
-                    entry = it
+            composable(
+                route = AppDestinations.EmployeeCustomerAllTransactionsScreen.route,
+                arguments = listOf(
+                    navArgument("customerId"){
+                        type = NavType.StringType
+                        nullable = false
+                    }
                 )
-            }
-
-            composable(route = AppDestinations.ViewAllNotificationsScreen.route) {
-                CustomerAllNotifications()
+            ) {
+                Surface(
+                    color = veryLightCoralPink
+                ) {
+                    val customerId = it.arguments?.getString("customerId")
+                    ViewAllTransactionScreenContainer(
+                        navController = navController,
+                        entry = it,
+                        customerId = customerId
+                    )
+                }
             }
 
             composable(
@@ -193,7 +215,6 @@ fun Navigation() {
                 arguments = listOf(
                     navArgument("transactionId") {
                         type = NavType.StringType
-                        defaultValue = ""
                         nullable = false
                     }
                 )
@@ -203,6 +224,93 @@ fun Navigation() {
                     entry = it,
                     transactionId = transactionId
                 )
+            }
+
+            composable(
+                route = AppDestinations.BalanceScreen.route,
+                arguments = listOf(
+                    navArgument("accountId") {
+                        type = NavType.StringType
+                        nullable = false
+                    }
+                )
+            ) {
+                val accountId = it.arguments?.getString("accountId") ?: ""
+                when(role){
+                    Role.CUSTOMER -> CustomerBalanceScreenContainer(
+                        entry = it,
+                        accountId = accountId
+                    )
+
+                    Role.EMPLOYEE -> EmployeeBalanceScreenContainer(
+                        entry = it,
+                        accountId = accountId
+                    )
+
+                    null -> null
+                }
+            }
+
+            composable(
+                route = AppDestinations.ParticularAccountScreen.route,
+                arguments = listOf(
+                    navArgument("accountId"){
+                        type = NavType.StringType
+                        nullable = false
+                    }
+                )
+            ) {
+                val accountId = it.arguments?.getString("accountId") ?: ""
+                Surface(
+                    color = veryLightCoralPink
+                ) {
+                    when(role){
+                        Role.CUSTOMER -> CustomerAccountDetailScreenContainer(
+                            navController = navController,
+                            entry = it,
+                            accountId = accountId
+                        )
+
+                        Role.EMPLOYEE -> EmployeeAccountDetailScreenContainer(
+                            navController = navController,
+                            entry = it,
+                            accountId = accountId
+                        )
+
+                        null -> null
+                    }
+                }
+            }
+
+            composable(
+                route = AppDestinations.AccountTransactionsScreen.route,
+                arguments = listOf(
+                    navArgument("accountId") {
+                        type = NavType.StringType
+                        nullable = false
+                    }
+                )
+            ) {
+                val accountId = it.arguments?.getString("accountId") ?: ""
+                Surface(
+                    color = veryLightCoralPink
+                ) {
+                    when(role){
+                        Role.CUSTOMER -> CustomerAccountTransactionsScreenContainer(
+                            navController = navController,
+                            entry = it,
+                            accountId = accountId
+                        )
+
+                        Role.EMPLOYEE -> EmployeeAccountTransactionsScreenContainer(
+                            navController = navController,
+                            entry = it,
+                            accountId = accountId
+                        )
+
+                        null -> null
+                    }
+                }
             }
         }
     }

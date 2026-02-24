@@ -1,36 +1,53 @@
 package com.example.bankingapp.viewmodel
 
-import android.util.Log
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.bankingapp.SessionManager
+import androidx.paging.cachedIn
 import com.example.bankingapp.models.exception.ErrorResponse
-import com.example.bankingapp.models.transactions.TransactionPagedResultDto
 import com.example.bankingapp.models.transactions.TransactionRequestDto
 import com.example.bankingapp.models.transactions.TransactionResponseDto
 import com.example.bankingapp.repository.transaction.TransactionRepository
 import com.example.bankingapp.utils.ApiResult
-import com.example.bankingapp.utils.Role
+import com.example.bankingapp.utils.TransactionParams
 import com.example.bankingapp.utils.TransactionStatus
 import com.example.bankingapp.utils.TransactionType
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 class TransactionViewModel(
-    private val transactionRepository: TransactionRepository,
-    private val sessionManager: SessionManager
+    private val transactionRepository: TransactionRepository
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(TransactionUiState())
     val uiState: StateFlow<TransactionUiState> = _uiState
 
-    val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+    private val _transactionParams = MutableStateFlow<TransactionParams?>(null)
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val transactions = _transactionParams.flatMapLatest { params ->
+        if(params == null) emptyFlow()
+        else if(params.customerId == null){
+            transactionRepository.getAllTransactionsByCustomer(
+                transactionStatus = params.transactionStatus,
+                transactionType = params.transactionType,
+                fromDate = params.fromDate,
+                toDate = params.toDate
+            )
+        } else {
+            transactionRepository.getAllTransactionsByEmployee(
+                customerId = params.customerId,
+                transactionStatus = params.transactionStatus,
+                transactionType = params.transactionType,
+                fromDate = params.fromDate,
+                toDate = params.toDate
+            )
+        }
+    }.cachedIn(viewModelScope)
 
     fun getCustomerTransaction(transactionId: String) {
         viewModelScope.launch {
@@ -167,98 +184,79 @@ class TransactionViewModel(
     }
 
     fun getCustomerAllTransactions(
-        page: Int? = null, size: Int? = null,
         transactionStatusStr: String? = null, transactionTypeStr: String? = null,
-        fromDate: LocalDate? = null, toDate: LocalDate? = null
+        fromDateStr: String? = null
     ) {
-        viewModelScope.launch {
-            _uiState.update {
-                it.copy(
-                    isLoadingCustomerAllTransactions = true
-                )
-            }
 
-            val transactionStatus = if (transactionStatusStr == null) null else TransactionStatus.valueOf(transactionStatusStr)
-            val transactionType = if(transactionTypeStr == null) null else TransactionType.valueOf(transactionTypeStr)
+        val transactionStatus =
+            if (transactionStatusStr == null) null else TransactionStatus.valueOf(
+                transactionStatusStr.uppercase()
+            )
+        val transactionType =
+            if (transactionTypeStr == null) null else TransactionType.valueOf(transactionTypeStr.uppercase())
 
-            _uiState.update {
-                when (val result = transactionRepository.getAllTransactionsByCustomer(
-                    page = page, size = size,
-                    transactionStatus = transactionStatus, transactionType = transactionType,
-                    fromDate = fromDate?.format(formatter), toDate = toDate?.format(formatter)
-                )) {
-                    is ApiResult.Failure -> it.copy(
-                        errorCustomerAllTransactions = result.error,
-                        isLoadingCustomerAllTransactions = false
-                    )
-
-                    is ApiResult.Success -> it.copy(
-                        customerAllTransaction = result.data,
-                        errorCustomerAllTransactions = null,
-                        isLoadingCustomerAllTransactions = false
-                    )
-                }
-            }
+        val monthsToMinus: Long = when (fromDateStr) {
+            "This month" -> 1
+            "Last 90 days" -> 3
+            "Last 180 days" -> 6
+            else -> 0
         }
+
+        val fromDate =
+            if (monthsToMinus.toInt() == 0) null else LocalDate.now().minusMonths(monthsToMinus)
+                .toString()
+
+        _transactionParams.value = TransactionParams(
+            transactionStatus = transactionStatus, transactionType = transactionType,
+            fromDate = fromDate
+        )
+
     }
 
     fun getEmployeeAllTransaction(
-        customerId: String, page: Int? = null, size: Int? = null,
-        transactionStatusStr: String? = null, transactionTypeStr: String? = null,
-        fromDate: LocalDate? = null, toDate: LocalDate? = null
+        customerId: String, transactionStatusStr: String? = null,
+        transactionTypeStr: String? = null, fromDateStr: String? = null
     ) {
-        viewModelScope.launch {
-            _uiState.update {
-                it.copy(
-                    isLoadingEmployeeAllTransactions = true
-                )
-            }
 
-            val transactionStatus = if (transactionStatusStr == null) null else TransactionStatus.valueOf(transactionStatusStr)
-            val transactionType = if(transactionTypeStr == null) null else TransactionType.valueOf(transactionTypeStr)
+        val transactionStatus =
+            if (transactionStatusStr == null) null else TransactionStatus.valueOf(
+                transactionStatusStr.uppercase()
+            )
+        val transactionType =
+            if (transactionTypeStr == null) null else TransactionType.valueOf(transactionTypeStr.uppercase())
 
-
-            _uiState.update {
-                when (val result = transactionRepository.getAllTransactionsByEmployee(
-                    customerId = customerId.toLong(), page = page, size = size,
-                    transactionStatus = transactionStatus, transactionType = transactionType,
-                    fromDate = fromDate?.format(formatter), toDate = toDate?.format(formatter)
-                )) {
-                    is ApiResult.Failure -> it.copy(
-                        errorEmployeeAllTransactions = result.error,
-                        isLoadingEmployeeAllTransactions = false
-                    )
-
-                    is ApiResult.Success -> it.copy(
-                        employeeAllTransaction = result.data,
-                        errorEmployeeAllTransactions = null,
-                        isLoadingEmployeeAllTransactions = false
-                    )
-                }
-            }
+        val monthsToMinus: Long = when (fromDateStr) {
+            "This month" -> 1
+            "Last 90 days" -> 3
+            "Last 180 days" -> 6
+            else -> 0
         }
+
+        val fromDate =
+            if (monthsToMinus.toInt() == 0) null else LocalDate.now().minusMonths(monthsToMinus)
+                .toString()
+
+        _transactionParams.value = TransactionParams(
+            transactionStatus = transactionStatus, transactionType = transactionType,
+            fromDate = fromDate, customerId = customerId.toLong()
+        )
     }
 }
 
 data class TransactionUiState(
     val isLoadingCustomerTransaction: Boolean = false,
     val isLoadingEmployeeTransaction: Boolean = false,
-    val isLoadingCustomerAllTransactions: Boolean = false,
-    val isLoadingEmployeeAllTransactions: Boolean = false,
     val isTransferringCustomer: Boolean = false,
     val isTransferringEmployee: Boolean = false,
 
     val customerTransaction: TransactionResponseDto? = null,
     val employeeTransaction: TransactionResponseDto? = null,
-    val customerAllTransaction: TransactionPagedResultDto? = null,
-    val employeeAllTransaction: TransactionPagedResultDto? = null,
     val customerTransfer: TransactionResponseDto? = null,
     val employeeTransfer: TransactionResponseDto? = null,
 
     val errorCustomerTransaction: ErrorResponse? = null,
     val errorEmployeeTransaction: ErrorResponse? = null,
-    val errorCustomerAllTransactions: ErrorResponse? = null,
-    val errorEmployeeAllTransactions: ErrorResponse? = null,
     val errorCustomerTransfer: ErrorResponse? = null,
     val errorEmployeeTransfer: ErrorResponse? = null
 )
+

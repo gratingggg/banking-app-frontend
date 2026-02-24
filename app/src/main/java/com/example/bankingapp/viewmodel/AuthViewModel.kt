@@ -24,8 +24,8 @@ class AuthViewModel(
 
             val result = authRepository.login(
                 LoginRequestDto(
-                    username = username,
-                    password = password
+                    username = username.trim(),
+                    password = password.trim()
                 )
             )
 

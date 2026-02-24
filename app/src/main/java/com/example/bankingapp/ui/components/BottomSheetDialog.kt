@@ -1,5 +1,6 @@
 package com.example.bankingapp.ui.components
 
+import android.R.attr.top
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -90,7 +91,8 @@ fun FilterBottomSheet(
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(24.dp),
+                    .padding(top = 24.dp, bottom = 12.dp)
+                    .padding(horizontal = 24.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color(0xFF87CEEB)
                 ),
@@ -106,7 +108,7 @@ fun FilterBottomSheet(
                 onClick = onCancel,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(24.dp),
+                    .padding(horizontal = 24.dp),
                 shape = RoundedCornerShape(16.dp)
             ) {
                 Text(

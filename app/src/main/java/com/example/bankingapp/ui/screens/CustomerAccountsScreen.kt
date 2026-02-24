@@ -22,6 +22,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.itemKey
 import com.example.bankingapp.ui.components.AccountRowTextField
 import com.example.bankingapp.ui.components.GandhijiNotePhoto
 import com.example.bankingapp.models.transactions.TransactionSummary
@@ -31,7 +33,7 @@ import com.example.bankingapp.ui.components.TransactionRowTextField
 fun CustomerAccountsScreen(
     modifier: Modifier = Modifier,
     accounts: List<Pair<String, String>> = emptyList(),
-    transactions: List<TransactionSummary>? = null,
+    transactions: LazyPagingItems<TransactionSummary>,
     onAccountClick: (String) -> Unit,
     onCheckBalance: (String) -> Unit,
     onViewAllTransactions: () -> Unit,
@@ -97,17 +99,20 @@ fun CustomerAccountsScreen(
                 }
             }
         }
+            val max = if(transactions.itemCount < 10) transactions.itemCount else 10
 
-        if(transactions != null && transactions.isNotEmpty()){
-            val max = if(transactions.size < 10) transactions.size else 10
-
-            items(transactions.take(max)){ transaction ->
-                TransactionRowTextField(
-                    transaction = transaction,
-                ) {
-                    onParticularTransactionClick(it)
+            items(
+                count = max,
+                key = transactions.itemKey(key = { it.transactionId })
+            ){ index ->
+                transactions[index]?.let {
+                    TransactionRowTextField(
+                        transaction = it,
+                    ) {
+                        onParticularTransactionClick(it)
+                    }
                 }
             }
-        }
+
     }
 }

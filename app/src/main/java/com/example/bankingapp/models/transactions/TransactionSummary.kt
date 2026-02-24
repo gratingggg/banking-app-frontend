@@ -5,5 +5,6 @@ data class TransactionSummary(
     val otherCustomer: String? = null,
     val dateOfTransaction: String,
     val amount: String,
-    val credit: Boolean
+    val credit: Boolean,
+    val success: Boolean
 )

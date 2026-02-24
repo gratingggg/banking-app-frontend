@@ -1,5 +1,6 @@
 package com.example.bankingapp.ui.components
 
+import android.R.attr.accountType
 import android.R.attr.top
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -34,7 +35,7 @@ fun AccountRowTextField(
     accountType: String,
     modifier: Modifier = Modifier,
     onAccountClick: () -> Unit,
-    onCheckBalance: () -> Unit
+    onCheckBalance: (String) -> Unit
 ){
     Card(
         modifier = modifier
@@ -95,7 +96,9 @@ fun AccountRowTextField(
                 ),
                 modifier = Modifier
                     .padding(top = 4.dp)
-                    .clickable(onClick = onCheckBalance)
+                    .clickable(onClick = {
+                        onCheckBalance(accountId)
+                    })
                     .weight(0.2f)
             )
         }

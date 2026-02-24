@@ -16,7 +16,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
-import androidx.navigation.NavController
 import com.example.bankingapp.SessionManager
 import com.example.bankingapp.network.RetrofitInstance
 import com.example.bankingapp.repository.transaction.TransactionRepositoryImpl
@@ -40,8 +39,7 @@ fun TransactionDetailsScreenContainer(
     val viewModel: TransactionViewModel = viewModel(
         viewModelStoreOwner = entry,
         factory = TransactionViewModelFactory(
-            transactionRepository = TransactionRepositoryImpl(RetrofitInstance.transactionApiService),
-            sessionManager = sessionManager
+            transactionRepository = TransactionRepositoryImpl(RetrofitInstance.transactionApiService)
         )
     )
 

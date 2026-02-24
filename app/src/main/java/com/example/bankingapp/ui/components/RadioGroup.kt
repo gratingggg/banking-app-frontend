@@ -12,7 +12,9 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun RadioGroup(
@@ -29,21 +31,26 @@ fun RadioGroup(
                 modifier = Modifier
                     .fillMaxWidth()
                     .selectable(
-                        selected = selected != null,
+                        selected = selected == option,
                         onClick = { onSelect(option) }
                     )
                     .padding(4.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 RadioButton(
-                    selected = selected != null,
+                    selected = selected == option,
                     onClick = {
                         onSelect(option)
                     }
                 )
 
                 Spacer(modifier = Modifier.width(12.dp))
-                Text(option)
+                Text(
+                    text = option,
+                    style = TextStyle(
+                        fontSize = 18.sp
+                    )
+                )
             }
         }
     }

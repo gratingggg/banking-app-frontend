@@ -1,5 +1,6 @@
 package com.example.bankingapp.ui.components
 
+import android.R.attr.type
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -25,7 +26,8 @@ fun FilterChipRow(
     onStatusSelected: (String?) -> Unit,
     onTypeSelected: (String?) -> Unit,
     onDateSelected: (String?) -> Unit,
-    onApply: () -> Unit
+    onApply: () -> Unit,
+    onFilterCancel: () -> Unit
 ) {
     var activeFilter by rememberSaveable {
         mutableStateOf<String?>(null)
@@ -36,7 +38,7 @@ fun FilterChipRow(
         modifier = modifier
             .fillMaxWidth()
             .horizontalScroll(scroll)
-            .padding(16.dp),
+            .padding(horizontal = 16.dp, vertical = 28.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         FilterChipItem(
@@ -47,6 +49,7 @@ fun FilterChipRow(
             }
         ) {
             onStatusSelected(null)
+            onFilterCancel()
         }
 
         FilterChipItem(
@@ -57,6 +60,7 @@ fun FilterChipRow(
             }
         ) {
             onTypeSelected(null)
+            onFilterCancel()
         }
 
         FilterChipItem(
@@ -67,6 +71,7 @@ fun FilterChipRow(
             }
         ) {
             onDateSelected(null)
+            onFilterCancel()
         }
     }
 
@@ -78,15 +83,12 @@ fun FilterChipRow(
             selectedDate = selectedTimeSpan,
             onTypeSelected = {
                 onTypeSelected(it)
-                activeFilter = null
             },
             onStatusSelected = {
                 onStatusSelected(it)
-                activeFilter = null
             },
             onDateSelected = {
                 onDateSelected(it)
-                activeFilter = null
             },
             status = status,
             types = type,

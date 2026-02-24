@@ -1,6 +1,6 @@
 package com.example.bankingapp.repository.notifications
 
-import com.example.bankingapp.models.notifications.NotificationPagedResultDto
+import com.example.bankingapp.models.PagedResponse
 import com.example.bankingapp.models.notifications.NotificationResponseDto
 import com.example.bankingapp.utils.ApiResult
 import com.example.bankingapp.utils.NotificationStatus
@@ -15,7 +15,7 @@ interface NotificationRepository {
         notificationType: NotificationType? = null,
         fromDate: LocalDate? = null,
         toDate: LocalDate? = null
-    ): ApiResult<NotificationPagedResultDto>
+    ): ApiResult<PagedResponse<NotificationResponseDto>>
 
     suspend fun getANotification(notificationId: Long): ApiResult<NotificationResponseDto>
 

@@ -2,13 +2,13 @@ package com.example.bankingapp.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.bankingapp.models.PagedResponse
 import com.example.bankingapp.models.exception.ErrorResponse
-import com.example.bankingapp.models.loan.LoanPagedResultDto
 import com.example.bankingapp.models.loan.LoanRepaymentDto
 import com.example.bankingapp.models.loan.LoanRequestDto
 import com.example.bankingapp.models.loan.LoanResponseDto
-import com.example.bankingapp.models.transactions.TransactionPagedResultDto
 import com.example.bankingapp.models.transactions.TransactionResponseDto
+import com.example.bankingapp.models.transactions.TransactionSummary
 import com.example.bankingapp.repository.loan.CustomerLoanRepository
 import com.example.bankingapp.utils.ApiResult
 import com.example.bankingapp.utils.LoanStatus
@@ -16,7 +16,6 @@ import com.example.bankingapp.utils.LoanType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -27,7 +26,7 @@ class CustomerLoanViewModel(
     private val _uiState = MutableStateFlow(CustomerLoanUiState())
     val uiState: StateFlow<CustomerLoanUiState> = _uiState
 
-    fun createLoan(accountId: Long, tenureInMonths: Int,
+    fun createLoan(accountId: String, tenureInMonths: Int,
                    loanTypeStr: String, principalAmountStr: String){
         viewModelScope.launch {
             _uiState.update {
@@ -37,7 +36,7 @@ class CustomerLoanViewModel(
             }
 
             val loanRequestDto = LoanRequestDto(
-                accountId = accountId,
+                accountId = accountId.toLong(),
                 tenureInMonths = tenureInMonths,
                 loanType = LoanType.valueOf(loanTypeStr.uppercase()),
                 principalAmount = BigDecimal(principalAmountStr)
@@ -60,7 +59,7 @@ class CustomerLoanViewModel(
         }
     }
 
-    fun repayLoan(loanId: Long, repayAmountStr: String){
+    fun repayLoan(loanId: String, repayAmountStr: String){
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
@@ -69,7 +68,7 @@ class CustomerLoanViewModel(
             }
 
             val loanRepaymentDto = LoanRepaymentDto(
-                loanId = loanId,
+                loanId = loanId.toLong(),
                 amount = BigDecimal(repayAmountStr)
             )
 
@@ -90,8 +89,8 @@ class CustomerLoanViewModel(
         }
     }
 
-    fun getAllLoans(page: Int? = null, size: Int? = null, loanStatus: LoanStatus? = null,
-        loanType: LoanType? = null, fromDate: LocalDate? = null, toDate: LocalDate? = null){
+    fun getAllLoans(page: Int? = null, size: Int? = null, loanStatusStr: String? = null,
+        loanTypeStr: String? = null, fromDateStr: String? = null){
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
@@ -99,9 +98,20 @@ class CustomerLoanViewModel(
                 )
             }
 
+            val loanStatus = if (loanStatusStr == null) null else LoanStatus.valueOf(loanStatusStr.uppercase())
+            val loanType = if(loanTypeStr == null) null else LoanType.valueOf(loanTypeStr.uppercase())
+
+            val monthsToMinus: Long = when(fromDateStr){
+                "This month" -> 1
+                "Last 90 days" -> 3
+                "Last 180 days" -> 6
+                else -> 0            }
+
+            val fromDate = if(monthsToMinus.toInt() == 0) null else LocalDate.now().minusMonths(monthsToMinus)
+
             val result = customerLoanRepository.getAllLoansByCustomer(
                 page = page, size = size, loanStatus = loanStatus,
-                loanType = loanType, fromDate = fromDate, toDate = toDate
+                loanType = loanType, fromDate = fromDate
             )
 
             _uiState.update {
@@ -121,7 +131,7 @@ class CustomerLoanViewModel(
         }
     }
 
-    fun getParticularLoan(loanId: Long){
+    fun getParticularLoan(loanId: String){
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
@@ -130,7 +140,7 @@ class CustomerLoanViewModel(
             }
 
             _uiState.update {
-                when(val result = customerLoanRepository.getParticularLoan(loanId)){
+                when(val result = customerLoanRepository.getParticularLoan(loanId.toLong())){
                     is ApiResult.Failure -> it.copy(
                         errorSelectedLoan = result.error,
                         isLoadingLoanDetails = false
@@ -146,8 +156,8 @@ class CustomerLoanViewModel(
         }
     }
 
-    fun getLoanTransactions(loanId: Long, page: Int? = null, size: Int? = null, loanStatus: LoanStatus? = null,
-                            loanType: LoanType? = null, fromDate: LocalDate? = null, toDate: LocalDate? = null){
+    fun getLoanTransactions(loanId: String, page: Int? = null, size: Int? = null, loanStatusStr: String? = null,
+                            loanTypeStr: String? = null, fromDateStr: String? = null){
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
@@ -155,9 +165,20 @@ class CustomerLoanViewModel(
                 )
             }
 
+            val loanStatus = if (loanStatusStr == null) null else LoanStatus.valueOf(loanStatusStr.uppercase())
+            val loanType = if(loanTypeStr == null) null else LoanType.valueOf(loanTypeStr.uppercase())
+
+            val monthsToMinus: Long = when(fromDateStr){
+                "This month" -> 1
+                "Last 90 days" -> 3
+                "Last 180 days" -> 6
+                else -> 0            }
+
+            val fromDate = if(monthsToMinus.toInt() == 0) null else LocalDate.now().minusMonths(monthsToMinus)
+
             val result = customerLoanRepository.getAllTransactions(
-                loanId = loanId, page = page, size = size, loanStatus = loanStatus,
-                loanType = loanType, fromDate = fromDate, toDate = toDate
+                loanId = loanId.toLong(), page = page, size = size, loanStatus = loanStatus,
+                loanType = loanType, fromDate = fromDate
             )
 
             _uiState.update {
@@ -181,8 +202,8 @@ class CustomerLoanViewModel(
 data class CustomerLoanUiState(
     val createdLoan: LoanResponseDto? = null,
     val repaidLoan: TransactionResponseDto? = null,
-    val allLoans: LoanPagedResultDto? = null,
-    val loanTransactions: TransactionPagedResultDto? = null,
+    val allLoans: PagedResponse<LoanResponseDto>? = null,
+    val loanTransactions: PagedResponse<TransactionSummary>? = null,
     val selectedLoan: LoanResponseDto? = null,
 
     val isCreatingLoan: Boolean = false,

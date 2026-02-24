@@ -1,6 +1,5 @@
-package com.example.bankingapp.ui.containers
+package com.example.bankingapp.ui.containers.customer
 
-import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.SnackbarDuration
@@ -13,12 +12,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
-import com.example.bankingapp.SessionManager
+import androidx.paging.LoadState
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.bankingapp.navigation.AppDestinations
 import com.example.bankingapp.navigation.navigateAndClear
 import com.example.bankingapp.network.RetrofitInstance
@@ -50,13 +49,12 @@ fun CustomerAccountsScreenContainer(
         factory = TransactionViewModelFactory(
             TransactionRepositoryImpl(
                 RetrofitInstance.transactionApiService
-            ),
-            sessionManager = SessionManager.getInstance(LocalContext.current)
+            )
         )
     )
 
     val accountState by accountViewModel.uiState.collectAsState()
-    val transactionState by transactionViewModel.uiState.collectAsState()
+    val transactions = transactionViewModel.transactions.collectAsLazyPagingItems()
 
     val snackbar = remember {
         SnackbarHostState()
@@ -68,15 +66,15 @@ fun CustomerAccountsScreenContainer(
         CustomerAccountsScreen(
             modifier = modifier,
             accounts = accountState.accountsList.map { Pair<String, String>(it.accountId.toString(), it.accountType.toString()) },
-            transactions = transactionState.customerAllTransaction?.content,
+            transactions = transactions,
             onAccountClick = {
                 navController.navigateAndClear(
-                    route = AppDestinations.CustomerParticularAccountScreen.customerParticularAccountRoute(it)
+                    route = AppDestinations.ParticularAccountScreen.particularAccountRoute(it)
                 )
             },
             onCheckBalance = {
                 navController.navigateAndClear(
-                    route = AppDestinations.CustomerViewBalanceScreen.customerViewBalanceRoute(it)
+                    route = AppDestinations.BalanceScreen.viewBalanceRoute(it)
                 )
             },
             onParticularTransactionClick = {
@@ -86,7 +84,7 @@ fun CustomerAccountsScreenContainer(
             },
             onViewAllTransactions = {
                 navController.navigateAndClear(
-                    route = AppDestinations.CustomerViewAllAccountsAllTransactionsScreen.route
+                    route = AppDestinations.CustomerAllTransactionScreen.route
                 )
             }
         )
@@ -111,11 +109,22 @@ fun CustomerAccountsScreenContainer(
         }
     }
 
-    LaunchedEffect(transactionState) {
-        if(transactionState.errorCustomerAllTransactions != null) {
-            val error = transactionState.errorCustomerAllTransactions!!
+    LaunchedEffect(accountState, transactions.loadState) {
+        val accountError = accountState.errorAccountsList
+        val transactionError = transactions.loadState.refresh as? LoadState.Error
+            ?: transactions.loadState.append as? LoadState.Error
+
+        accountError?.message?.let {
             snackbar.showSnackbar(
-                message = error.message,
+                message = it,
+                withDismissAction = true,
+                duration = SnackbarDuration.Short
+            )
+        }
+
+        transactionError?.error?.message?.let {
+            snackbar.showSnackbar(
+                message = it,
                 withDismissAction = true,
                 duration = SnackbarDuration.Short
             )

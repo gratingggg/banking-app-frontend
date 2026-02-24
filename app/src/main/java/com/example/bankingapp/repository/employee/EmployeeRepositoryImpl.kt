@@ -4,7 +4,6 @@ import android.R.attr.action
 import android.util.Log
 import com.example.bankingapp.models.employee.EmployeeResponseDto
 import com.example.bankingapp.models.exception.ErrorResponse
-import com.example.bankingapp.models.loan.LoanPagedResultDto
 import com.example.bankingapp.models.loan.LoanResponseDto
 import com.example.bankingapp.models.transactions.TransactionResponseDto
 import com.example.bankingapp.network.EmployeeApiService
