@@ -31,6 +31,7 @@ import com.example.bankingapp.ui.components.BottomNavigationBar
 import com.example.bankingapp.ui.containers.LoginScreenContainer
 import com.example.bankingapp.ui.containers.TransactionDetailsScreenContainer
 import com.example.bankingapp.ui.containers.ViewAllTransactionScreenContainer
+import com.example.bankingapp.ui.containers.customer.CustomerAccountCreateScreenContainer
 import com.example.bankingapp.ui.containers.customer.CustomerAccountDetailScreenContainer
 import com.example.bankingapp.ui.containers.customer.CustomerAccountTransactionsScreenContainer
 import com.example.bankingapp.ui.containers.customer.CustomerAccountsScreenContainer
@@ -311,6 +312,15 @@ fun Navigation() {
                         null -> null
                     }
                 }
+            }
+
+            composable(
+                route = AppDestinations.CustomerCreateAccountScreen.route
+            ) {
+                CustomerAccountCreateScreenContainer(
+                    navController = navController,
+                    entry = it
+                )
             }
         }
     }

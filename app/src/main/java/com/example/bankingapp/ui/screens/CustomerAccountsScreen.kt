@@ -16,8 +16,16 @@ import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.MenuAnchorType
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
@@ -28,6 +36,8 @@ import com.example.bankingapp.ui.components.AccountRowTextField
 import com.example.bankingapp.ui.components.GandhijiNotePhoto
 import com.example.bankingapp.models.transactions.TransactionSummary
 import com.example.bankingapp.ui.components.TransactionRowTextField
+import com.example.bankingapp.ui.theme.lightCoralPink
+import com.example.bankingapp.ui.theme.veryLightCoralPink
 
 @Composable
 fun CustomerAccountsScreen(
@@ -116,3 +126,4 @@ fun CustomerAccountsScreen(
 
     }
 }
+

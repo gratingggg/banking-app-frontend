@@ -41,7 +41,7 @@ fun NormalDropdownMenuBox(
     fieldValue: String,
     fieldLabel: String,
     options: List<String>,
-    imageVector: ImageVector,
+    imageVector: ImageVector?,
     isErrorTriggered: Boolean = false,
     onSelected: (String) -> Unit
 ) {
@@ -78,11 +78,14 @@ fun NormalDropdownMenuBox(
                     color = Color.Black
                 ),
                 placeholder = { Text(text = fieldLabel) },
-                leadingIcon = {
-                    Icon(
-                        imageVector = imageVector,
-                        contentDescription = null
-                    )
+                leadingIcon = if(imageVector == null)  null
+                else{
+                    {
+                        Icon(
+                            imageVector = imageVector,
+                            contentDescription = null
+                        )
+                    }
                 },
                 trailingIcon = {
                     ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)

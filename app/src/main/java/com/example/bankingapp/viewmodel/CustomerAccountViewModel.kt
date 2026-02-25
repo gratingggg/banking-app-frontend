@@ -143,7 +143,7 @@ class CustomerAccountViewModel(
             }
 
             val accountRequestDto = AccountRequestDto(
-                accountType = AccountType.valueOf(accountTypeStr)
+                accountType = AccountType.valueOf(accountTypeStr.uppercase())
             )
 
             val result = customerAccountRepository.createAccountByCustomer(accountRequestDto)
