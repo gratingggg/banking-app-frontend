@@ -3,8 +3,10 @@ package com.example.bankingapp.ui.screens
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -14,7 +16,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.bankingapp.ui.components.NormalDropdownMenuBox
 import com.example.bankingapp.utils.AccountType
 
@@ -33,19 +37,18 @@ fun CustomerCreateAccountScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(24.dp)
+            .padding(
+                vertical = 48.dp,
+                horizontal = 24.dp
+            )
     ) {
         Text(
             text = "Create Account",
-            style = MaterialTheme.typography.titleLarge
+            style = MaterialTheme.typography.titleLarge,
+            modifier = Modifier.padding(24.dp)
         )
 
-        Spacer(modifier = Modifier.height(100.dp))
-
-        Text(
-            text = "Account Type",
-            style = MaterialTheme.typography.titleMedium
-        )
+        Spacer(modifier = Modifier.height(50.dp))
 
         NormalDropdownMenuBox(
             fieldValue = accountType,
@@ -54,7 +57,22 @@ fun CustomerCreateAccountScreen(
             imageVector = null,
             isErrorTriggered = isErrorTriggered
         ) {
-            onContinue(it)
+            accountType = it
+        }
+
+        Button(
+            onClick = {
+                onContinue(accountType)
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(24.dp)
+        ) {
+            Text(
+                text = "Continue",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.SemiBold
+            )
         }
     }
 }

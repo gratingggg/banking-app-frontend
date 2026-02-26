@@ -50,14 +50,6 @@ fun CustomerAccountCreateScreenContainer(
             isErrorTriggered = state.errorCreatedAccount != null
         ) {
             viewModel.createAccount(it)
-            if(state.errorCreatedAccount == null){
-                state.createdAccount?.accountId?.let {
-                    navController.navigateAndClear(
-                        route = AppDestinations.ParticularAccountScreen.particularAccountRoute(it.toString()),
-                        popUpToRoute = AppDestinations.CustomerCreateAccountScreen.route
-                    )
-                }
-            }
         }
 
         SnackbarHost(
@@ -75,6 +67,15 @@ fun CustomerAccountCreateScreenContainer(
                 message = it,
                 duration = SnackbarDuration.Short,
                 withDismissAction = true
+            )
+        }
+    }
+
+    LaunchedEffect(state.createdAccount) {
+        state.createdAccount?.accountId?.let {
+            navController.navigateAndClear(
+                route = AppDestinations.ParticularAccountScreen.particularAccountRoute(it.toString()),
+                popUpToRoute = AppDestinations.CustomerCreateAccountScreen.route
             )
         }
     }

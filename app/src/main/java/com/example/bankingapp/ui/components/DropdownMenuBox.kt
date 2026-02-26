@@ -61,7 +61,8 @@ fun NormalDropdownMenuBox(
             style = TextStyle(
                 fontSize = 18.sp,
                 fontWeight = FontWeight.SemiBold
-            )
+            ),
+            modifier = Modifier.padding(bottom = 24.dp)
         )
 
         ExposedDropdownMenuBox(

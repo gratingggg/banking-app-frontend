@@ -170,7 +170,7 @@ class CustomerAccountViewModel(
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
-                    isDeletingAccount = true
+                    isLoadingSelectedAccountDetails = true
                 )
             }
 
@@ -179,14 +179,14 @@ class CustomerAccountViewModel(
             _uiState.update {
                 when (result) {
                     is ApiResult.Failure -> it.copy(
-                        errorDeletedAccount = result.error,
-                        isDeletingAccount = false
+                        errorSelectedAccount = result.error,
+                        isLoadingSelectedAccountDetails = false
                     )
 
                     is ApiResult.Success -> it.copy(
-                        deletedAccount = result.data,
-                        errorDeletedAccount = null,
-                        isDeletingAccount = false
+                        selectedAccount = result.data,
+                        errorSelectedAccount = null,
+                        isLoadingSelectedAccountDetails = false
                     )
                 }
             }
@@ -226,18 +226,15 @@ data class CustomerAccountUiState(
     val accountsList: List<AccountSummaryDto> = emptyList<AccountSummaryDto>(),
     val selectedAccount: AccountResponseDto? = null,
     val createdAccount: AccountResponseDto? = null,
-    val deletedAccount: AccountResponseDto? = null,
     val balance: AccountBalanceResponseDto? = null,
 
     val isLoadingAccounts: Boolean = false,
     val isLoadingSelectedAccountDetails: Boolean = false,
     val isCreatingAccount: Boolean = false,
-    val isDeletingAccount: Boolean = false,
     val isLoadingBalance: Boolean = false,
 
     val errorAccountsList: ErrorResponse? = null,
     val errorSelectedAccount: ErrorResponse? = null,
     val errorCreatedAccount: ErrorResponse? = null,
-    val errorDeletedAccount: ErrorResponse? = null,
     val errorGetBalance: ErrorResponse? = null
 )

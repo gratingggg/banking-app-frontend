@@ -33,8 +33,14 @@ fun NormalTextField(
     imageVector: ImageVector,
     isErrorTriggered: Boolean = false,
     enablePhoneOnlyKeyboard: Boolean = false,
+    errorMsg: (@Composable () -> Unit)? = null,
+    validate: ((String) -> Boolean)? = null,
     onValueChanged: (String) -> Unit
 ) {
+    var isError by rememberSaveable {
+        mutableStateOf(false)
+    }
+
     Column(
         modifier = Modifier.padding(6.dp)
     ) {
@@ -54,7 +60,9 @@ fun NormalTextField(
             value = fieldValue,
             onValueChange = {
                 onValueChanged(it)
+                isError = validate?.invoke(it) == false
             },
+            isError = isError,
             textStyle = TextStyle(
                 color = Color.Black
             ),
@@ -68,14 +76,16 @@ fun NormalTextField(
                     contentDescription = null
                 )
             },
+            supportingText = if(isError) errorMsg else null,
             modifier = Modifier
                 .fillMaxWidth()
                 .onFocusChanged { isFocused = it.isFocused }
                 .drawBehind {
+                    val textFieldHeight = 56.dp.toPx()
                     drawLine(
                         color = if(isErrorTriggered) Color.Red else if (isFocused) lightCoralPink else Color.Gray,
-                        start = Offset(12f, size.height),
-                        end = Offset(size.width, size.height),
+                        start = Offset(12f, textFieldHeight),
+                        end = Offset(size.width, textFieldHeight),
                         strokeWidth = 2.dp.toPx()
                     )
                 },

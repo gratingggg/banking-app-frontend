@@ -1,5 +1,6 @@
 package com.example.bankingapp.ui.screens
 
+import android.util.Patterns
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -123,7 +124,13 @@ fun RegisterScreen(
             fieldValue = email,
             fieldLabel = "Email",
             isErrorTriggered = isErrorTriggered,
-            imageVector = Icons.Default.Email
+            imageVector = Icons.Default.Email,
+            validate = {
+                Patterns.EMAIL_ADDRESS.matcher(it).matches()
+            },
+            errorMsg = {
+                Text("Invalid email address")
+            }
         ) {
             email = it
         }
@@ -181,7 +188,13 @@ fun RegisterScreen(
             fieldLabel = "Phone Number",
             isErrorTriggered = isErrorTriggered,
             enablePhoneOnlyKeyboard = true,
-            imageVector = Icons.Default.Phone
+            imageVector = Icons.Default.Phone,
+            validate = {
+                it.all { it.isDigit() } && it.length == 10
+            },
+            errorMsg = {
+                Text("Invalid phone number")
+            }
         ) {
             phoneNumber = it
         }
@@ -204,7 +217,13 @@ fun RegisterScreen(
             fieldValue = aadharNumber,
             isErrorTriggered = isErrorTriggered,
             enablePhoneOnlyKeyboard = true,
-            imageVector = Icons.Default.CreditCard
+            imageVector = Icons.Default.CreditCard,
+            validate = {
+                it.length == 12 && it.all { it.isDigit() }
+            },
+            errorMsg = {
+                Text("Invalid aadhar number")
+            }
         ) {
             aadharNumber = it
         }

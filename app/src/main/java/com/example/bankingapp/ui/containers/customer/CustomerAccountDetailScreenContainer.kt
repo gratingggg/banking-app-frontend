@@ -23,8 +23,11 @@ import com.example.bankingapp.navigation.navigateAndClear
 import com.example.bankingapp.network.RetrofitInstance
 import com.example.bankingapp.repository.account.AccountRepositoryImpl
 import com.example.bankingapp.ui.screens.AccountDetailScreen
+import com.example.bankingapp.utils.AccountStatus
+import com.example.bankingapp.utils.Constants
 import com.example.bankingapp.viewmodel.CustomerAccountViewModel
 import com.example.bankingapp.viewmodel.factory.CustomerAccountViewModelFactory
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun CustomerAccountDetailScreenContainer(
@@ -57,13 +60,18 @@ fun CustomerAccountDetailScreenContainer(
                 accountId = accountDetails.accountId.toString(),
                 accountStatus = accountDetails.accountStatus.toString(),
                 accountType = accountDetails.accountType.toString(),
-                dateOfIssuance = accountDetails.dateOfIssuance.toString(),
+                deleteAccount = accountDetails.accountStatus == AccountStatus.ACTIVE,
+                dateOfIssuance = accountDetails.dateOfIssuance.format(DateTimeFormatter.ofPattern(
+                    Constants.LOCAL_DATE_PATTERN)),
                 customerName = accountDetails.customerName.toString(),
                 transactions = transactions,
                 onViewAccountTransactions = {
                     navController.navigateAndClear(
                         route = AppDestinations.AccountTransactionsScreen.accountTransactionsRoute(accountId)
                     )
+                },
+                onDeleteAccount = {
+                    viewModel.deleteAccount(it)
                 }
             ) {
                 navController.navigateAndClear(

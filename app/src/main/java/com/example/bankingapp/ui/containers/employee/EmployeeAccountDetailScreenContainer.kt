@@ -23,8 +23,10 @@ import com.example.bankingapp.navigation.navigateAndClear
 import com.example.bankingapp.network.RetrofitInstance
 import com.example.bankingapp.repository.account.AccountRepositoryImpl
 import com.example.bankingapp.ui.screens.AccountDetailScreen
+import com.example.bankingapp.utils.Constants
 import com.example.bankingapp.viewmodel.EmployeeAccountViewModel
 import com.example.bankingapp.viewmodel.factory.EmployeeAccountViewModelFactory
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun EmployeeAccountDetailScreenContainer(
@@ -57,7 +59,8 @@ fun EmployeeAccountDetailScreenContainer(
                 accountId = accountDetails.accountId.toString(),
                 accountStatus = accountDetails.accountStatus.toString(),
                 accountType = accountDetails.accountType.toString(),
-                dateOfIssuance = accountDetails.dateOfIssuance.toString(),
+                dateOfIssuance = accountDetails.dateOfIssuance.format(DateTimeFormatter.ofPattern(
+                    Constants.LOCAL_DATE_PATTERN)),
                 customerName = accountDetails.customerName.toString(),
                 transactions = employeeTransactions,
                 onViewAccountTransactions = {
