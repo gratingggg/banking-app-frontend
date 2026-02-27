@@ -1,6 +1,5 @@
 package com.example.bankingapp.ui.components
 
-import android.R.attr.type
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row

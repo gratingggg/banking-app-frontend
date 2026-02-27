@@ -19,7 +19,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bankingapp.models.notifications.NotificationResponseDto
+import com.example.bankingapp.ui.theme.lightCoralPink
 import com.example.bankingapp.utils.Constants
+import com.example.bankingapp.utils.NotificationStatus
 import java.time.format.DateTimeFormatter
 
 @Composable
@@ -37,7 +39,11 @@ fun NotificationItem(
             }),
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF2A2A2A)
+            containerColor = if (notification.notificationStatus == NotificationStatus.READ) {
+                Color(
+                    0xFF2A2A2A
+                )
+            } else lightCoralPink
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
@@ -73,7 +79,9 @@ fun NotificationItem(
             }
 
             Text(
-                text = notification.date.format(DateTimeFormatter.ofPattern(Constants.))
+                text = notification.date.format(DateTimeFormatter.ofPattern(Constants.LOCAL_DATE_TIME_PATTERN)),
+                fontSize = 14.sp,
+                color = Color.White
             )
         }
     }

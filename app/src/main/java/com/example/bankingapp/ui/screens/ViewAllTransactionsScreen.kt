@@ -30,7 +30,6 @@ fun ViewAllTransactionScreen(
     var selectedStatus by rememberSaveable { mutableStateOf<String?>(null) }
     var selectedType by rememberSaveable{ mutableStateOf<String?>(null) }
     var selectedDate by rememberSaveable { mutableStateOf<String?>(null) }
-    var selectedAccount by rememberSaveable { mutableStateOf<String?>(null) }
 
 
     Column(
@@ -50,8 +49,7 @@ fun ViewAllTransactionScreen(
                     mapOf(
                         "Status" to selectedStatus,
                         "Type" to selectedType,
-                        "Date" to selectedDate,
-                        "Account" to selectedAccount
+                        "Date" to selectedDate
                     )
                 )
             },
@@ -60,8 +58,7 @@ fun ViewAllTransactionScreen(
                 mapOf(
                     "Status" to selectedStatus,
                     "Type" to selectedType,
-                    "Date" to selectedDate,
-                    "Account" to selectedAccount
+                    "Date" to selectedDate
                 )
             )
         }

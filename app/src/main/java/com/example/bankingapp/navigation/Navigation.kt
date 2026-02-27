@@ -35,8 +35,10 @@ import com.example.bankingapp.ui.containers.customer.CustomerAccountCreateScreen
 import com.example.bankingapp.ui.containers.customer.CustomerAccountDetailScreenContainer
 import com.example.bankingapp.ui.containers.customer.CustomerAccountTransactionsScreenContainer
 import com.example.bankingapp.ui.containers.customer.CustomerAccountsScreenContainer
+import com.example.bankingapp.ui.containers.customer.CustomerAllNotificationsScreenContainer
 import com.example.bankingapp.ui.containers.customer.CustomerBalanceScreenContainer
 import com.example.bankingapp.ui.containers.customer.CustomerDashboardContainer
+import com.example.bankingapp.ui.containers.customer.ParticularNotificationScreenContainer
 import com.example.bankingapp.ui.containers.customer.RegisterScreenContainer
 import com.example.bankingapp.ui.containers.employee.EmployeeAccountDetailScreenContainer
 import com.example.bankingapp.ui.containers.employee.EmployeeAccountTransactionsScreenContainer
@@ -321,6 +323,35 @@ fun Navigation() {
                     navController = navController,
                     entry = it
                 )
+            }
+
+            composable(
+                route = AppDestinations.ViewAllNotificationsScreen.route
+            ){
+                Surface {
+                    CustomerAllNotificationsScreenContainer(
+                        navController = navController,
+                        entry = it
+                    )
+                }
+            }
+
+            composable(
+                route = AppDestinations.ParticularNotificationScreen.route,
+                arguments = listOf(
+                    navArgument("notificationId") {
+                        type = NavType.StringType
+                        nullable = false
+                    }
+                )
+            ) {
+                val notificationId = it.arguments?.getString("notificationId") ?: Long.MAX_VALUE.toString()
+                Surface {
+                    ParticularNotificationScreenContainer(
+                        entry = it,
+                        notificationId = notificationId
+                    )
+                }
             }
         }
     }

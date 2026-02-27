@@ -19,8 +19,8 @@ interface NotificationApiService {
         @Query("size") size: Int? = null,
         @Query("type") notificationType: NotificationType? = null,
         @Query("status") notificationStatus: NotificationStatus? = null,
-        @Query("fromDate") fromDate: LocalDate? = null,
-        @Query("toDate") toDate: LocalDate? = null
+        @Query("fromDate") fromDate: String? = null,
+        @Query("toDate") toDate: String? = null
     ): Response<PagedResponse<NotificationResponseDto>>
 
     @GET(Endpoints.NOTIFICATION_PARTICULAR)

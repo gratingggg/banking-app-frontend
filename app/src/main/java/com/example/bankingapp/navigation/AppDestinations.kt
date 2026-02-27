@@ -32,6 +32,8 @@ sealed class AppDestinations(val route: String){
     object ViewAllNotificationsScreen: AppDestinations("customer_view_all_notifications_screen")
     object CustomerAllTransactionScreen: AppDestinations("customer_all_transactions_screen")
 
+    object ParticularNotificationScreen: AppDestinations("customer_particular_notification_screen/{notificationId}")
+
 
 
 
@@ -46,6 +48,12 @@ sealed class AppDestinations(val route: String){
     object AccountTransactionsScreen: AppDestinations("account_transactions_screen/{accountId}")
 
 
+
+    fun particularNotificationRoute(notificationId: String) = "customer_particular_notification_screen/$notificationId"
+
+
+
+
     fun particularAccountRoute(accountId: String) = "particular_account_screen/$accountId"
 
     fun particularTransactionRoute(transactionId: String) = "particular_transaction_screen/$transactionId"
@@ -53,7 +61,6 @@ sealed class AppDestinations(val route: String){
     fun viewBalanceRoute(accountId: String) = "balance_screen/$accountId"
 
     fun accountTransactionsRoute(accountId: String) = "account_transactions_screen/$accountId"
-
 
 
 
