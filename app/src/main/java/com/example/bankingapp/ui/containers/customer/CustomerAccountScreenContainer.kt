@@ -23,7 +23,7 @@ import com.example.bankingapp.navigation.navigateAndClear
 import com.example.bankingapp.network.RetrofitInstance
 import com.example.bankingapp.repository.account.AccountRepositoryImpl
 import com.example.bankingapp.repository.transaction.TransactionRepositoryImpl
-import com.example.bankingapp.ui.screens.CustomerAccountsScreen
+import com.example.bankingapp.ui.screens.customer.CustomerAccountsScreen
 import com.example.bankingapp.viewmodel.CustomerAccountViewModel
 import com.example.bankingapp.viewmodel.TransactionViewModel
 import com.example.bankingapp.viewmodel.factory.CustomerAccountViewModelFactory

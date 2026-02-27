@@ -21,7 +21,7 @@ import com.example.bankingapp.navigation.AppDestinations
 import com.example.bankingapp.navigation.navigateAndClear
 import com.example.bankingapp.network.RetrofitInstance
 import com.example.bankingapp.repository.account.AccountRepositoryImpl
-import com.example.bankingapp.ui.screens.CustomerCreateAccountScreen
+import com.example.bankingapp.ui.screens.customer.CustomerCreateAccountScreen
 import com.example.bankingapp.viewmodel.CustomerAccountViewModel
 import com.example.bankingapp.viewmodel.factory.CustomerAccountViewModelFactory
 

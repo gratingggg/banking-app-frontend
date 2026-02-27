@@ -30,11 +30,12 @@ import com.example.bankingapp.ui.theme.lightCoralPink
 fun NormalTextField(
     fieldValue: String,
     fieldLabel: String,
-    imageVector: ImageVector,
+    imageVector: ImageVector? = null,
     isErrorTriggered: Boolean = false,
     enablePhoneOnlyKeyboard: Boolean = false,
     errorMsg: (@Composable () -> Unit)? = null,
     validate: ((String) -> Boolean)? = null,
+    textColor: Color = Color.Black,
     onValueChanged: (String) -> Unit
 ) {
     var isError by rememberSaveable {
@@ -44,13 +45,13 @@ fun NormalTextField(
     Column(
         modifier = Modifier.padding(6.dp)
     ) {
-            Text(
-                text = fieldLabel,
-                style = TextStyle(
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
+        Text(
+            text = fieldLabel,
+            style = TextStyle(
+                fontSize = 18.sp,
+                fontWeight = FontWeight.SemiBold
             )
+        )
 
         var isFocused by rememberSaveable {
             mutableStateOf(false)
@@ -63,27 +64,29 @@ fun NormalTextField(
                 isError = validate?.invoke(it) == false
             },
             isError = isError,
-            textStyle = TextStyle(
-                color = Color.Black
-            ),
             placeholder = { Text(text = fieldLabel) },
             keyboardOptions = KeyboardOptions(
-                keyboardType = if(enablePhoneOnlyKeyboard) KeyboardType.Phone else KeyboardType.Text
+                keyboardType = if (enablePhoneOnlyKeyboard) KeyboardType.Phone else KeyboardType.Text
             ),
-            leadingIcon = {
-                Icon(
-                    imageVector = imageVector,
-                    contentDescription = null
-                )
+            leadingIcon = imageVector?.let {
+                {
+                    Icon(
+                        imageVector = it,
+                        contentDescription = null
+                    )
+                }
             },
-            supportingText = if(isError) errorMsg else null,
+            textStyle = TextStyle(
+                color = textColor
+            ),
+            supportingText = if (isError) errorMsg else null,
             modifier = Modifier
                 .fillMaxWidth()
                 .onFocusChanged { isFocused = it.isFocused }
                 .drawBehind {
                     val textFieldHeight = 56.dp.toPx()
                     drawLine(
-                        color = if(isErrorTriggered) Color.Red else if (isFocused) lightCoralPink else Color.Gray,
+                        color = if (isErrorTriggered) Color.Red else if (isFocused) lightCoralPink else Color.Gray,
                         start = Offset(12f, textFieldHeight),
                         end = Offset(size.width, textFieldHeight),
                         strokeWidth = 2.dp.toPx()

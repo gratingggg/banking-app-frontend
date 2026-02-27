@@ -1,6 +1,5 @@
-package com.example.bankingapp.ui.screens
+package com.example.bankingapp.ui.screens.customer
 
-import android.R.attr.type
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row

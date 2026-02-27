@@ -24,7 +24,7 @@ import com.example.bankingapp.navigation.AppDestinations
 import com.example.bankingapp.navigation.navigateAndClear
 import com.example.bankingapp.network.RetrofitInstance
 import com.example.bankingapp.repository.notifications.NotificationRepositoryImpl
-import com.example.bankingapp.ui.screens.CustomerAllNotificationsScreen
+import com.example.bankingapp.ui.screens.customer.CustomerAllNotificationsScreen
 import com.example.bankingapp.utils.NotificationStatus
 import com.example.bankingapp.utils.NotificationType
 import com.example.bankingapp.viewmodel.NotificationViewModel

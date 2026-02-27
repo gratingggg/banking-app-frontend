@@ -6,7 +6,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import com.example.bankingapp.navigation.AppDestinations
 import com.example.bankingapp.navigation.navigateAndClear
-import com.example.bankingapp.ui.screens.CustomerDashboardScreen
+import com.example.bankingapp.ui.screens.customer.CustomerDashboardScreen
 
 @Composable
 fun CustomerDashboardContainer(
@@ -18,7 +18,7 @@ fun CustomerDashboardContainer(
             .fillMaxSize(),
         onBankTransfer = {
             navController.navigateAndClear(
-                route = AppDestinations.CustomerMoneyTransferScreen.route
+                route = AppDestinations.MoneyTransferScreen.route
             )
         },
         onViewAllLoans = {

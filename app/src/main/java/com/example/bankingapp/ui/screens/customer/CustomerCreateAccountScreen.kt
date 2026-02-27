@@ -1,4 +1,4 @@
-package com.example.bankingapp.ui.screens
+package com.example.bankingapp.ui.screens.customer
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer

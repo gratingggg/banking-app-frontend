@@ -1,4 +1,4 @@
-package com.example.bankingapp.ui.screens
+package com.example.bankingapp.ui.screens.customer
 
 import android.util.Patterns
 import androidx.compose.foundation.clickable

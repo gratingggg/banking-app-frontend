@@ -29,6 +29,7 @@ import com.example.bankingapp.SessionManager
 import com.example.bankingapp.ui.components.BottomNavItem
 import com.example.bankingapp.ui.components.BottomNavigationBar
 import com.example.bankingapp.ui.containers.LoginScreenContainer
+import com.example.bankingapp.ui.containers.MoneyTransferScreenContainer
 import com.example.bankingapp.ui.containers.TransactionDetailsScreenContainer
 import com.example.bankingapp.ui.containers.ViewAllTransactionScreenContainer
 import com.example.bankingapp.ui.containers.customer.CustomerAccountCreateScreenContainer
@@ -43,7 +44,7 @@ import com.example.bankingapp.ui.containers.customer.RegisterScreenContainer
 import com.example.bankingapp.ui.containers.employee.EmployeeAccountDetailScreenContainer
 import com.example.bankingapp.ui.containers.employee.EmployeeAccountTransactionsScreenContainer
 import com.example.bankingapp.ui.containers.employee.EmployeeBalanceScreenContainer
-import com.example.bankingapp.ui.screens.EmployeeDashboard
+import com.example.bankingapp.ui.screens.employee.EmployeeDashboard
 import com.example.bankingapp.ui.screens.SplashScreen
 import com.example.bankingapp.ui.screens.WelcomeScreen
 import com.example.bankingapp.ui.theme.primaryContainerLight
@@ -350,6 +351,17 @@ fun Navigation() {
                     ParticularNotificationScreenContainer(
                         entry = it,
                         notificationId = notificationId
+                    )
+                }
+            }
+
+            composable(
+                route = AppDestinations.MoneyTransferScreen.route
+            ) {
+                Surface {
+                    MoneyTransferScreenContainer(
+                        navController = navController,
+                        entry = it
                     )
                 }
             }

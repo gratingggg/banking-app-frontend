@@ -15,6 +15,7 @@ sealed class AppDestinations(val route: String){
 
 
     object Login: AppDestinations("login_screen")
+    object MoneyTransferScreen: AppDestinations("money_transfer_screen")
 
 
 
@@ -26,7 +27,6 @@ sealed class AppDestinations(val route: String){
     object Register: AppDestinations("register_screen")
 
     object CustomerCreateAccountScreen: AppDestinations("customer_create_account_screen")
-    object CustomerMoneyTransferScreen: AppDestinations("customer_money_transfer_screen")
     object CustomerViewAllLoansScreen: AppDestinations("customer_view_all_loans_screen")
     object CustomerCreateLoanScreen: AppDestinations("customer_create_loan_screen")
     object ViewAllNotificationsScreen: AppDestinations("customer_view_all_notifications_screen")

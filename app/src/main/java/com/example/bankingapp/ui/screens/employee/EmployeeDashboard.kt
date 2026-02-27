@@ -1,4 +1,4 @@
-package com.example.bankingapp.ui.screens
+package com.example.bankingapp.ui.screens.employee
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.Text
@@ -8,7 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun CustomerProfileScreen(
+fun EmployeeDashboard(
     modifier: Modifier = Modifier
 ){
     Box(
@@ -16,7 +16,7 @@ fun CustomerProfileScreen(
         contentAlignment = Alignment.Center
     ){
         Text(
-            text = "Customer Profile",
+            text = "Employee Dashboard",
             fontSize = 20.sp
         )
     }

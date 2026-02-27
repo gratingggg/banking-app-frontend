@@ -20,7 +20,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
 import com.example.bankingapp.network.RetrofitInstance
 import com.example.bankingapp.repository.notifications.NotificationRepositoryImpl
-import com.example.bankingapp.ui.screens.ParticularNotificationScreen
+import com.example.bankingapp.ui.screens.customer.ParticularNotificationScreen
 import com.example.bankingapp.ui.theme.veryLightCoralPink
 import com.example.bankingapp.utils.Constants
 import com.example.bankingapp.viewmodel.NotificationViewModel

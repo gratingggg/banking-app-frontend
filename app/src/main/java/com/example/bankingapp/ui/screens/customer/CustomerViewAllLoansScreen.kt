@@ -1,4 +1,4 @@
-package com.example.bankingapp.ui.screens
+package com.example.bankingapp.ui.screens.customer
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.Text
@@ -8,7 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun CustomerMoneyTransferScreen(
+fun CustomerViewAllLoansScreen(
     modifier: Modifier = Modifier
 ){
     Box(
@@ -16,7 +16,7 @@ fun CustomerMoneyTransferScreen(
         contentAlignment = Alignment.Center
     ){
         Text(
-            text = "Customer Money Transfer",
+            text = "Customer All Loans",
             fontSize = 20.sp
         )
     }

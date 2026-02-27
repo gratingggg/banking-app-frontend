@@ -8,6 +8,7 @@ import com.example.bankingapp.models.transactions.TransactionRequestDto
 import com.example.bankingapp.models.transactions.TransactionResponseDto
 import com.example.bankingapp.repository.transaction.TransactionRepository
 import com.example.bankingapp.utils.ApiResult
+import com.example.bankingapp.utils.Role
 import com.example.bankingapp.utils.TransactionParams
 import com.example.bankingapp.utils.TransactionStatus
 import com.example.bankingapp.utils.TransactionType
@@ -240,6 +241,44 @@ class TransactionViewModel(
             transactionStatus = transactionStatus, transactionType = transactionType,
             fromDate = fromDate, customerId = customerId.toLong()
         )
+    }
+
+    fun transferFund(
+        amountStr: String,
+        fromAccountId: String,
+        toAccountId: String? = null,
+        loanId: String? = null,
+        transactionTypeStr: String,
+        role: Role? = null
+    ){
+        role?.let {
+            when(it){
+                Role.CUSTOMER -> transferFundByCustomer(
+                    amountStr = amountStr,
+                    fromAccountId = fromAccountId,
+                    toAccountId = toAccountId,
+                    loanId = loanId,
+                    transactionTypeStr = transactionTypeStr
+                )
+
+                Role.EMPLOYEE -> transferFundByEmployee(
+                    amountStr = amountStr,
+                    fromAccountId = fromAccountId,
+                    toAccountId = toAccountId,
+                    loanId = loanId,
+                    transactionTypeStr = transactionTypeStr
+                )
+            }
+        }
+    }
+
+    fun clearTransferState(){
+        _uiState.update {
+            it.copy(
+                customerTransfer = null,
+                employeeTransfer = null
+            )
+        }
     }
 }
 
