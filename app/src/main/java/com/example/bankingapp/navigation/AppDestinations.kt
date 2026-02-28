@@ -39,6 +39,7 @@ sealed class AppDestinations(val route: String){
 
     object EmployeeDashboard: AppDestinations("employee_screen")
     object EmployeeCustomerAllTransactionsScreen: AppDestinations("employee_customer_all_transactions_screen/{customerId}")
+    object EmployeeCreateLoanScreen: AppDestinations("employee_create_loan_screen")
 
 
 
@@ -46,6 +47,7 @@ sealed class AppDestinations(val route: String){
     object ParticularTransactionScreen: AppDestinations("particular_transaction_screen/{transactionId}")
     object BalanceScreen: AppDestinations("balance_screen/{accountId}")
     object AccountTransactionsScreen: AppDestinations("account_transactions_screen/{accountId}")
+    object ParticularLoanScreen: AppDestinations("particular_loan_screen/{loanId}")
 
 
 
@@ -62,6 +64,7 @@ sealed class AppDestinations(val route: String){
 
     fun accountTransactionsRoute(accountId: String) = "account_transactions_screen/$accountId"
 
+    fun particularLoanRoute(loanId: String) = "particular_loan_screen/$loanId"
 
 
     fun employeeCustomerAllTransactionsRoute(customerId: String) = "employee_customer_all_transactions_screen/$customerId"

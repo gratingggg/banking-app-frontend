@@ -24,7 +24,7 @@ class EmployeeLoanViewModel(
     private val _uiState = MutableStateFlow(EmployeeLoanUiState())
     val uiState: StateFlow<EmployeeLoanUiState> = _uiState
 
-    fun createLoan(accountId: Long, tenureInMonths: Int,
+    fun createLoan(accountId: String, tenureInMonths: String,
                    loanTypeStr: String, principalAmountStr: String){
         viewModelScope.launch {
             _uiState.update {
@@ -34,14 +34,14 @@ class EmployeeLoanViewModel(
             }
 
             val loanRequestDto = LoanRequestDto(
-                accountId = accountId,
-                tenureInMonths = tenureInMonths,
+                accountId = accountId.toLong(),
+                tenureInMonths = tenureInMonths.toInt(),
                 loanType = LoanType.valueOf(loanTypeStr),
                 principalAmount = BigDecimal(principalAmountStr)
             )
 
             _uiState.update {
-                when(val result = employeeLoanRepository.createLoanByEmployee(accountId, loanRequestDto)){
+                when(val result = employeeLoanRepository.createLoanByEmployee(accountId.toLong(), loanRequestDto)){
                     is ApiResult.Failure -> it.copy(
                         errorCreateLoan = result.error,
                         isCreatingLoan = false

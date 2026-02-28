@@ -38,12 +38,14 @@ import com.example.bankingapp.ui.containers.customer.CustomerAccountTransactions
 import com.example.bankingapp.ui.containers.customer.CustomerAccountsScreenContainer
 import com.example.bankingapp.ui.containers.customer.CustomerAllNotificationsScreenContainer
 import com.example.bankingapp.ui.containers.customer.CustomerBalanceScreenContainer
+import com.example.bankingapp.ui.containers.customer.CustomerCreateLoanScreenContainer
 import com.example.bankingapp.ui.containers.customer.CustomerDashboardContainer
 import com.example.bankingapp.ui.containers.customer.ParticularNotificationScreenContainer
 import com.example.bankingapp.ui.containers.customer.RegisterScreenContainer
 import com.example.bankingapp.ui.containers.employee.EmployeeAccountDetailScreenContainer
 import com.example.bankingapp.ui.containers.employee.EmployeeAccountTransactionsScreenContainer
 import com.example.bankingapp.ui.containers.employee.EmployeeBalanceScreenContainer
+import com.example.bankingapp.ui.containers.employee.EmployeeCreateLoanScreenContainer
 import com.example.bankingapp.ui.screens.employee.EmployeeDashboard
 import com.example.bankingapp.ui.screens.SplashScreen
 import com.example.bankingapp.ui.screens.WelcomeScreen
@@ -360,6 +362,28 @@ fun Navigation() {
             ) {
                 Surface {
                     MoneyTransferScreenContainer(
+                        navController = navController,
+                        entry = it
+                    )
+                }
+            }
+
+            composable(
+                route = AppDestinations.CustomerCreateLoanScreen.route
+            ){
+                Surface {
+                    CustomerCreateLoanScreenContainer(
+                        navController = navController,
+                        entry = it
+                    )
+                }
+            }
+
+            composable(
+                route = AppDestinations.EmployeeCreateLoanScreen.route
+            ) {
+                Surface {
+                    EmployeeCreateLoanScreenContainer(
                         navController = navController,
                         entry = it
                     )

@@ -26,7 +26,7 @@ class CustomerLoanViewModel(
     private val _uiState = MutableStateFlow(CustomerLoanUiState())
     val uiState: StateFlow<CustomerLoanUiState> = _uiState
 
-    fun createLoan(accountId: String, tenureInMonths: Int,
+    fun createLoan(accountId: String, tenureInMonths: String,
                    loanTypeStr: String, principalAmountStr: String){
         viewModelScope.launch {
             _uiState.update {
@@ -37,7 +37,7 @@ class CustomerLoanViewModel(
 
             val loanRequestDto = LoanRequestDto(
                 accountId = accountId.toLong(),
-                tenureInMonths = tenureInMonths,
+                tenureInMonths = tenureInMonths.toInt(),
                 loanType = LoanType.valueOf(loanTypeStr.uppercase()),
                 principalAmount = BigDecimal(principalAmountStr)
             )
